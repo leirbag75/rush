@@ -1,0 +1,3 @@
+
+(defpackage :rush
+  (:use :cl))
