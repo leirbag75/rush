@@ -8,7 +8,8 @@
                   :initform '())))
 
 (defmethod next-events ((battle battle))
-  (reverse (queued-events battle)))
+  (prog1 (reverse (queued-events battle))
+    (setf (queued-events battle) '())))
 
 (defmethod inflict-damage ((battle battle) combatant amount)
   (push (make-instance 'damage-infliction
