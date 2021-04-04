@@ -14,8 +14,11 @@
            :expected expected
            :actual actual)))
 
+(defvar *mock-combatant-number* 0)
+
 (defclass mock-combatant ()
-  ())
+  ((name :reader name
+         :initform (format nil "Mock ~A" (incf *mock-combatant-number*)))))
 
 (deftest battle-base-case (test-battle)
   (let ((battle (make-instance 'battle)))
