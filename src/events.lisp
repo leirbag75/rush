@@ -36,3 +36,16 @@
           "~A took ~A damage."
           (name (target event))
           (amount event)))
+
+(defclass death (event)
+  ((target :reader target
+           :initarg :target))
+  (:default-initargs :target nil))
+
+(defmethod default-message ((event death))
+  (format nil
+          "~A died."
+          (name (target event))))
+
+(defmethod events-match-p ((x death) (y death))
+  (eql (target x) (target y)))
