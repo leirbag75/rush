@@ -29,22 +29,28 @@
                  :target combatant
                  :amount *weak-damage*))
 
+(defun make-mock-combatant ()
+  (make-instance 'mock-combatant))
+
+(defun resulting-events (battle)
+  (next-events battle))
+
 (deftest battle-base-case (test-battle)
   (let ((battle (make-battle-with-combatants)))
     (assert-events-match '()
-                         (next-events battle))))
+                         (resulting-events battle))))
 
 (deftest battle-single-event (test-battle)
-  (let* ((combatant (make-instance 'mock-combatant))
+  (let* ((combatant (make-mock-combatant))
          (battle (make-battle-with-combatants combatant)))
     (inflict-weak-damage battle combatant)
     (assert-events-match (list (make-weak-damage-event combatant))
-                         (next-events battle))))
+                         (resulting-events battle))))
 
 (deftest battle-discard-events (test-battle)
-  (let* ((combatant (make-instance 'mock-combatant))
+  (let* ((combatant (make-mock-combatant))
          (battle (make-battle-with-combatants combatant)))
     (inflict-weak-damage battle combatant)
-    (next-events battle)
+    (resulting-events battle)
     (assert-events-match '()
-                         (next-events battle))))
+                         (resulting-events battle))))
