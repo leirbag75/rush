@@ -54,3 +54,13 @@
     (resulting-events battle)
     (assert-events-match '()
                          (resulting-events battle))))
+
+(deftest battle-multiple-events (test-battle)
+  (let* ((combatant (make-mock-combatant))
+         (combatant2 (make-mock-combatant))
+         (battle (make-battle-with-combatants combatant combatant2)))
+    (inflict-weak-damage battle combatant)
+    (inflict-weak-damage battle combatant2)
+    (assert-events-match (list (make-weak-damage-event combatant)
+                               (make-weak-damage-event combatant2))
+                         (resulting-events battle))))
