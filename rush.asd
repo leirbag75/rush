@@ -4,6 +4,7 @@
   :serial t
   :components ((:file "package")
                (:module "src"
-                        :components ((:file "battle-interface")))
+                :components ((:file "battle-interface")
+                             (:file "events")))
                (:module "test"
                         :components ((:file "framework")))))
