@@ -5,6 +5,8 @@
   :components ((:file "package")
                (:module "src"
                 :components ((:file "battle-interface")
-                             (:file "events")))
+                             (:file "events")
+                             (:file "battle")))
                (:module "test"
-                        :components ((:file "framework")))))
+                :components ((:file "framework")
+                             (:file "test-battle")))))
