@@ -2,10 +2,8 @@
 (in-package :rush)
 
 (defgeneric name (object)
-  (:method ((object string))
-    object)
   (:method (object)
-    "_"))
+    (format nil "~A" object)))
 
 (defclass event ()
   ())
