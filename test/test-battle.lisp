@@ -1,10 +1,6 @@
 
 (in-package :rush)
 
-(defgeneric events-match-p (event1 event2)
-  (:method ((event1 event) (event2 event))
-    nil))
-
 (defun all-events-match-p (expected actual)
   (lists-match-p #'events-match-p expected actual))
 
