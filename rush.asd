@@ -11,5 +11,5 @@
                              (:file "battle")))
                (:module "test"
                 :components ((:file "framework")
-                             (:file "test-battle")
-                             (:file "test-event-accumulator")))))
+                             (:file "test-event-accumulator")
+                             (:file "test-battle")))))
