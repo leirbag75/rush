@@ -5,8 +5,11 @@
   :components ((:file "package")
                (:module "src"
                 :components ((:file "battle-interface")
+                             (:file "event-accumulator-interface")
                              (:file "events")
+                             (:file "event-accumulator")
                              (:file "battle")))
                (:module "test"
                 :components ((:file "framework")
-                             (:file "test-battle")))))
+                             (:file "test-battle")
+                             (:file "test-event-accumulator")))))
