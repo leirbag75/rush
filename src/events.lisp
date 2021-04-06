@@ -17,8 +17,8 @@
     (format stream "~A" (default-message event))))
 
 (defgeneric events-match-p (event1 event2)
-  (:method ((event1 event) (event2 event))
-    nil))
+  (:method (event1 event2)
+    (eql event1 event2)))
 
 (defclass damage-infliction (event)
   ((target :reader target
