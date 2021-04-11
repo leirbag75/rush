@@ -15,29 +15,34 @@
 (defun make-battle-with-combatants (&rest combatants)
   (make-instance 'battle :combatants combatants))
 
-(defun half-kill (battle combatant)
-  (inflict-damage battle combatant (floor *mock-combatant-max-hp* 2)))
-
-(defun make-half-kill-event (combatant)
-  (make-instance 'damage-infliction
-                 :target combatant
-                 :amount (floor *mock-combatant-max-hp* 2)))
-
-(defun make-death-event (combatant)
-  (make-instance 'death :target combatant))
-
 (defun make-mock-combatant ()
   (make-instance 'mock-combatant))
 
-(defun resulting-events (battle)
-  (next-events battle))
+(deftest subtracts-hp (test-battle)
+  (let* ((combatant (make-mock-combatant))
+         (remaining-hp (- *mock-combatant-max-hp* 10))
+         (battle (make-battle-with-combatants combatant)))
+    (inflict-damage battle combatant 10)
+    (unless (eql (remaining-hp battle combatant) remaining-hp)
+      (error 'objects-dont-match
+             :expected remaining-hp
+             :actual (remaining-hp battle combatant)))))
+
+(deftest adds-damage-infliction-event (test-battle)
+  (let* ((combatant (make-mock-combatant))
+         (battle (make-battle-with-combatants combatant)))
+    (inflict-damage battle combatant 10)
+    (assert-events-match (list (make-instance 'damage-infliction
+                                              :target combatant
+                                              :amount 10))
+                         (next-events battle))))
 
 (deftest battle-death (test-battle)
   (let* ((combatant (make-mock-combatant))
          (battle (make-battle-with-combatants combatant)))
-    (half-kill battle combatant)
-    (half-kill battle combatant)
-    (assert-events-match (list (make-half-kill-event combatant)
-                               (make-half-kill-event combatant)
-                               (make-death-event combatant))
-                         (resulting-events battle))))
+    (inflict-damage battle combatant *mock-combatant-max-hp*)
+    (assert-events-match (list (make-instance 'damage-infliction
+                                              :target combatant
+                                              :amount *mock-combatant-max-hp*)
+                               (make-instance 'death :target combatant))
+                         (next-events battle))))
