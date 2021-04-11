@@ -12,7 +12,7 @@
 (defmethod next-events ((battle battle))
   (next-events (event-accumulator battle)))
 
-(defun remaining-hp (battle combatant)
+(defmethod remaining-hp ((battle battle) combatant)
   (or (gethash combatant (remaining-hp-table battle))
       (setf (remaining-hp battle combatant)
             (max-hp combatant))))
