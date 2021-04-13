@@ -48,14 +48,30 @@
                          (make-instance 'death :target combatant))))
 
 (defclass mock-move ()
-  ())
+  ((body :reader body
+         :initarg :body)))
+
+(defmethod perform-move ((move mock-move) battle combatant)
+  (funcall (body move) battle combatant))
 
 (deftest should-add-use-move-event (test-battle)
   (let* ((combatant (make-mock-combatant))
-         (move (make-instance 'mock-move))
+         (move (make-instance 'mock-move
+                              :body (lambda (&rest args)
+                                      (declare (ignore args)))))
          (battle (make-battle-with-combatants combatant)))
     (input-moves battle combatant (list move))
     (assert-events-match (next-events battle)
                          (make-instance 'move-use
                                         :move move
                                         :user combatant))))
+
+(deftest should-call-perform-move (test-battle)
+  (should-be-evaluated (-->this) ("perform-move not called")
+    (let* ((combatant (make-mock-combatant))
+           (move (make-instance 'mock-move
+                                :body (lambda (&rest args)
+                                        (declare (ignore args))
+                                        -->this)))
+           (battle (make-battle-with-combatants combatant)))
+      (input-moves battle combatant (list move)))))

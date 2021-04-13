@@ -6,6 +6,7 @@
                (:module "src"
                 :components ((:file "battle-interface")
                              (:file "event-accumulator-interface")
+                             (:file "move-interface")
                              (:file "events")
                              (:file "event-accumulator")
                              (:file "battle")))
