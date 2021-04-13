@@ -32,17 +32,17 @@
   (let* ((combatant (make-mock-combatant))
          (battle (make-battle-with-combatants combatant)))
     (inflict-damage battle combatant 10)
-    (assert-events-match (list (make-instance 'damage-infliction
-                                              :target combatant
-                                              :amount 10))
-                         (next-events battle))))
+    (assert-events-match (next-events battle)
+                         (make-instance 'damage-infliction
+                                        :target combatant
+                                        :amount 10))))
 
 (deftest battle-death (test-battle)
   (let* ((combatant (make-mock-combatant))
          (battle (make-battle-with-combatants combatant)))
     (inflict-damage battle combatant *mock-combatant-max-hp*)
-    (assert-events-match (list (make-instance 'damage-infliction
-                                              :target combatant
-                                              :amount *mock-combatant-max-hp*)
-                               (make-instance 'death :target combatant))
-                         (next-events battle))))
+    (assert-events-match (next-events battle)
+                         (make-instance 'damage-infliction
+                                        :target combatant
+                                        :amount *mock-combatant-max-hp*)
+                         (make-instance 'death :target combatant))))
