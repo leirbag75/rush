@@ -46,3 +46,16 @@
                                         :target combatant
                                         :amount *mock-combatant-max-hp*)
                          (make-instance 'death :target combatant))))
+
+(defclass mock-move ()
+  ())
+
+(deftest should-add-use-move-event (test-battle)
+  (let* ((combatant (make-mock-combatant))
+         (move (make-instance 'mock-move))
+         (battle (make-battle-with-combatants combatant)))
+    (input-moves battle combatant (list move))
+    (assert-events-match (next-events battle)
+                         (make-instance 'move-use
+                                        :move move
+                                        :user combatant))))

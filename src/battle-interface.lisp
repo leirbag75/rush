@@ -4,3 +4,5 @@
 (defgeneric remaining-hp (battle combatant))
 
 (defgeneric inflict-damage (battle combatant amount))
+
+(defgeneric input-moves (battle combatant moves))

@@ -34,3 +34,7 @@
       (add-event battle
                  (make-instance 'death
                                 :target combatant)))))
+
+(defmethod input-moves ((battle battle) combatant moves)
+  (dolist (move moves)
+    (add-event battle (make-instance 'move-use :user combatant :move move))))

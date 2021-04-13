@@ -49,3 +49,19 @@
 
 (defmethod events-match-p ((x death) (y death))
   (eql (target x) (target y)))
+
+(defclass move-use (event)
+  ((move :reader move
+         :initarg :move)
+   (user :reader user
+         :initarg :user)))
+
+(defmethod default-message ((event move-use))
+  (format nil
+          "~A used ~A."
+          (name (user event))
+          (name (move event))))
+
+(defmethod events-match-p ((x move-use) (y move-use))
+  (and (eql (user x) (user y))
+       (eql (move x) (move y))))
