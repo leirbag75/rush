@@ -64,6 +64,17 @@
     (mapc #'call-with-test-restarts (tests suite))
     (values)))
 
+(defun run-all-tests (&key debug-on-failure)
+  (maphash (lambda (suite value)
+             (declare (ignore value))
+             (handler-bind ((error (if debug-on-failure
+                                       #'leave-to-debugger
+                                       #'log-and-continue)))
+               (mapc #'call-with-test-restarts (tests suite))
+               (values)))
+           *suites*)
+  (values))
+
 (defmacro deftest (name (suite) &body body)
   `(add-test (defun ,name ()
                (let ((*current-test* ',name))
