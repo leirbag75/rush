@@ -37,6 +37,22 @@
           (name (target event))
           (amount event)))
 
+(defclass damage-heal (event)
+  ((target :reader target
+           :initarg :target)
+   (amount :reader amount
+           :initarg :amount)))
+
+(defmethod events-match-p ((x damage-heal) (y damage-heal))
+  (and (eql (target x) (target y))
+       (eql (amount x) (amount y))))
+
+(defmethod default-message ((event damage-heal))
+  (format nil
+          "~A recovered ~A damage."
+          (name (target event))
+          (amount event)))
+
 (defclass death (event)
   ((target :reader target
            :initarg :target))

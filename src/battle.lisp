@@ -29,6 +29,16 @@
         (clamp (- (remaining-hp battle combatant) amount)
                0
                (max-hp combatant))))
+
+(defmethod heal-damage ((battle battle) combatant amount)
+  (setf (remaining-hp battle combatant)
+        (clamp (+ (remaining-hp battle combatant) amount)
+               0
+               (max-hp combatant)))
+  (add-event battle (make-instance 'damage-heal
+                                   :target combatant
+                                   :amount amount)))
+
 (defmethod add-event ((battle battle) event)
   (add-event (event-accumulator battle) event))
 

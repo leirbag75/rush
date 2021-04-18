@@ -46,6 +46,35 @@
                                         :target combatant
                                         :amount 10))))
 
+(deftest adds-hp (test-battle)
+  (let* ((combatant (make-mock-combatant))
+         (remaining-hp (* *mock-combatant-max-hp* 3/4))
+         (battle (make-battle-with-combatants combatant)))
+    (inflict-damage battle combatant (/ *mock-combatant-max-hp* 2))
+    (heal-damage battle combatant (/ *mock-combatant-max-hp* 4))
+    (unless (eql (remaining-hp battle combatant) remaining-hp)
+      (error 'objects-dont-match
+             :expected remaining-hp
+             :actual (remaining-hp battle combatant)))))
+
+(deftest keeps-hp-at-most-max (test-battle)
+  (let* ((combatant (make-mock-combatant))
+         (battle (make-battle-with-combatants combatant)))
+    (heal-damage battle combatant 10)
+    (unless (eql (remaining-hp battle combatant) *mock-combatant-max-hp*)
+      (error 'objects-dont-match
+             :expected *mock-combatant-max-hp*
+             :actual (remaining-hp battle combatant)))))
+
+(deftest adds-damage-heal-event (test-battle)
+  (let* ((combatant (make-mock-combatant))
+         (battle (make-battle-with-combatants combatant)))
+    (heal-damage battle combatant 10)
+    (assert-events-match battle
+                         (make-instance 'damage-heal
+                                        :target combatant
+                                        :amount 10))))
+
 (deftest battle-death (test-battle)
   (let* ((combatant (make-mock-combatant))
          (battle (make-battle-with-combatants combatant)))
