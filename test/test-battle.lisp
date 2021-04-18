@@ -28,6 +28,15 @@
              :expected remaining-hp
              :actual (remaining-hp battle combatant)))))
 
+(deftest keeps-hp-at-least-0 (test-battle)
+  (let* ((combatant (make-mock-combatant))
+         (battle (make-battle-with-combatants combatant)))
+    (inflict-damage battle combatant (* 2 *mock-combatant-max-hp*))
+    (unless (eql (remaining-hp battle combatant) 0)
+      (error 'objects-dont-match
+             :expected 0
+             :actual (remaining-hp battle combatant)))))
+
 (deftest adds-damage-infliction-event (test-battle)
   (let* ((combatant (make-mock-combatant))
          (battle (make-battle-with-combatants combatant)))

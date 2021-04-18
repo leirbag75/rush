@@ -21,6 +21,14 @@
   (setf (gethash combatant (remaining-hp-table battle))
         amount))
 
+(defun clamp (value bottom top)
+  (min (max value bottom) top))
+
+(defun deduct-hp (battle combatant amount)
+  (setf (remaining-hp battle combatant)
+        (clamp (- (remaining-hp battle combatant) amount)
+               0
+               (max-hp combatant))))
 (defmethod add-event ((battle battle) event)
   (add-event (event-accumulator battle) event))
 
@@ -29,7 +37,7 @@
              (make-instance 'damage-infliction
                             :target combatant
                             :amount amount))
-  (let ((remaining-hp (decf (remaining-hp battle combatant) amount)))
+  (let ((remaining-hp (deduct-hp battle combatant amount)))
     (when (<= remaining-hp 0)
       (add-event battle
                  (make-instance 'death
