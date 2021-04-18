@@ -36,6 +36,8 @@
                                 :target combatant)))))
 
 (defmethod input-moves ((battle battle) combatant moves)
-  (dolist (move moves)
-    (add-event battle (make-instance 'move-use :user combatant :move move))
-    (perform-move move battle combatant)))
+  (dolist (move-target-pair moves)
+    (let ((move (car move-target-pair))
+          (target (cdr move-target-pair)))
+      (add-event battle (make-instance 'move-use :user combatant :move move))
+      (perform-move move battle combatant target))))

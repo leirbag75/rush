@@ -51,8 +51,8 @@
   ((body :reader body
          :initarg :body)))
 
-(defmethod perform-move ((move mock-move) battle combatant)
-  (funcall (body move) battle combatant))
+(defmethod perform-move ((move mock-move) battle combatant target)
+  (funcall (body move) battle combatant target))
 
 (deftest should-add-use-move-event (test-battle)
   (let* ((combatant (make-mock-combatant))
@@ -60,7 +60,7 @@
                               :body (lambda (&rest args)
                                       (declare (ignore args)))))
          (battle (make-battle-with-combatants combatant)))
-    (input-moves battle combatant (list move))
+    (input-moves battle combatant (list (cons move combatant)))
     (assert-events-match battle
                          (make-instance 'move-use
                                         :move move
@@ -74,4 +74,4 @@
                                         (declare (ignore args))
                                         -->this)))
            (battle (make-battle-with-combatants combatant)))
-      (input-moves battle combatant (list move)))))
+      (input-moves battle combatant (list (cons move combatant))))))
