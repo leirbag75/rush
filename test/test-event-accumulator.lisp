@@ -1,16 +1,6 @@
 
 (in-package :rush)
 
-(defun all-events-match-p (expected actual)
-  (lists-match-p #'events-match-p expected actual))
-
-(defun assert-events-match (event-accumulator &rest expected)
-  (let ((actual (next-events event-accumulator)))
-    (unless (all-events-match-p expected actual)
-      (error 'objects-dont-match
-             :expected expected
-             :actual actual))))
-
 (deftest starts-empty (test-event-accumulator)
   (let ((event-accumulator (make-instance 'event-accumulator)))
     (assert-events-match event-accumulator)))

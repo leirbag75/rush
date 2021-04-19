@@ -135,3 +135,13 @@ Got value: ~A"
   (and (eql (length list1)
             (length list2))
        (every element-predicate list1 list2)))
+
+(defun all-events-match-p (expected actual)
+  (lists-match-p #'events-match-p expected actual))
+
+(defun assert-events-match (event-accumulator &rest expected)
+  (let ((actual (next-events event-accumulator)))
+    (unless (all-events-match-p expected actual)
+      (error 'objects-dont-match
+             :expected expected
+             :actual actual))))
