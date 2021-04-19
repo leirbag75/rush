@@ -28,18 +28,12 @@
   (multiple-value-bind (battle combatant) (make-test-battle)
     (let ((remaining-hp (- *mock-combatant-max-hp* 10)))
       (inflict-damage battle combatant 10)
-      (unless (eql (remaining-hp battle combatant) remaining-hp)
-        (error 'objects-dont-match
-               :expected remaining-hp
-               :actual (remaining-hp battle combatant))))))
+      (assert-eql remaining-hp (remaining-hp battle combatant)))))
 
 (deftest keeps-hp-at-least-0 (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (inflict-damage battle combatant (* 2 *mock-combatant-max-hp*))
-    (unless (eql (remaining-hp battle combatant) 0)
-      (error 'objects-dont-match
-             :expected 0
-             :actual (remaining-hp battle combatant)))))
+    (assert-eql 0 (remaining-hp battle combatant))))
 
 (deftest adds-damage-infliction-event (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
@@ -54,18 +48,12 @@
     (let ((remaining-hp (* *mock-combatant-max-hp* 3/4)))
       (inflict-damage battle combatant (/ *mock-combatant-max-hp* 2))
       (heal-damage battle combatant (/ *mock-combatant-max-hp* 4))
-      (unless (eql (remaining-hp battle combatant) remaining-hp)
-        (error 'objects-dont-match
-               :expected remaining-hp
-               :actual (remaining-hp battle combatant))))))
+      (assert-eql remaining-hp (remaining-hp battle combatant)))))
 
 (deftest keeps-hp-at-most-max (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (heal-damage battle combatant 10)
-    (unless (eql (remaining-hp battle combatant) *mock-combatant-max-hp*)
-      (error 'objects-dont-match
-             :expected *mock-combatant-max-hp*
-             :actual (remaining-hp battle combatant)))))
+    (assert-eql *mock-combatant-max-hp* (remaining-hp battle combatant))))
 
 (deftest adds-damage-heal-event (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
