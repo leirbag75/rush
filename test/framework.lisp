@@ -145,3 +145,9 @@ Got value: ~A"
       (error 'objects-dont-match
              :expected expected
              :actual actual))))
+
+(defun assert-eql (expected actual)
+  (unless (eql expected actual)
+    (error 'objects-dont-match
+           :expected expected
+           :actual actual)))
