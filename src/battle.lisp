@@ -67,4 +67,6 @@
     (let ((move (car move-target-pair))
           (target (cdr move-target-pair)))
       (add-event battle (make-instance 'move-use :user combatant :move move))
-      (perform-move move battle combatant target))))
+      (perform-move move battle combatant target)))
+  (end-turn (turn-manager battle))
+  (values))
