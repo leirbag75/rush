@@ -7,4 +7,4 @@
 
 (defgeneric heal-damage (battle combatant amount))
 
-(defgeneric input-moves (battle combatant moves))
+(defgeneric input-moves (battle moves))

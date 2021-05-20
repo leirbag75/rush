@@ -85,7 +85,7 @@
          (move (make-instance 'mock-move
                               :body (lambda (&rest args)
                                       (declare (ignore args))))))
-    (input-moves battle combatant (list (cons move combatant)))
+    (input-moves battle (list (cons move combatant)))
     (assert-events-match battle
                          (make-instance 'move-use
                                         :move move
@@ -99,4 +99,4 @@
                                 :body (lambda (&rest args)
                                         (declare (ignore args))
                                         -->this))))
-      (input-moves battle combatant (list (cons move combatant))))))
+      (input-moves battle (list (cons move combatant))))))

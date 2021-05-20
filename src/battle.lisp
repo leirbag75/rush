@@ -62,8 +62,9 @@
                  (make-instance 'death
                                 :target combatant)))))
 
-(defmethod input-moves ((battle battle) combatant moves)
+(defmethod input-moves ((battle battle) moves)
   (loop
+    with combatant = (next-player-to-move battle)
     for move-target-pair in moves
     for move = (car move-target-pair)
     for target = (cdr move-target-pair)
