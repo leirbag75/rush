@@ -63,10 +63,11 @@
                                 :target combatant)))))
 
 (defmethod input-moves ((battle battle) combatant moves)
-  (dolist (move-target-pair moves)
-    (let ((move (car move-target-pair))
-          (target (cdr move-target-pair)))
-      (add-event battle (make-instance 'move-use :user combatant :move move))
-      (perform-move move battle combatant target)))
-  (end-turn (turn-manager battle))
-  (values))
+  (loop
+    for move-target-pair in moves
+    for move = (car move-target-pair)
+    for target = (cdr move-target-pair)
+    do
+       (add-event battle (make-instance 'move-use :user combatant :move move))
+       (perform-move move battle combatant target)
+    finally (end-turn (turn-manager battle))))
