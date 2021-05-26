@@ -113,3 +113,9 @@
                          (make-instance 'momentum-gain
                                         :target combatant
                                         :amount 20))))
+
+(deftest enters-rush-mode (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (add-momentum battle combatant 140)
+    (unless (in-rush-mode-p battle combatant)
+      (error "Combatant did not enter rush mode"))))

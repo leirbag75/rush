@@ -12,3 +12,5 @@
 (defgeneric add-momentum (battle combatant amount))
 
 (defgeneric current-momentum (battle combatant))
+
+(defgeneric in-rush-mode-p (battle combatant))
