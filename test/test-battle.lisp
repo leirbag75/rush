@@ -105,3 +105,11 @@
   (multiple-value-bind (battle combatant) (make-test-battle)
     (add-momentum battle combatant 20)
     (assert-eql 20 (current-momentum battle combatant))))
+
+(deftest adds-momentum-gain-event (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (add-momentum battle combatant 20)
+    (assert-events-match battle
+                         (make-instance 'momentum-gain
+                                        :target combatant
+                                        :amount 20))))

@@ -76,7 +76,10 @@
     finally (end-turn (turn-manager battle))))
 
 (defmethod add-momentum ((battle battle) combatant amount)
-  (incf (current-momentum battle combatant) amount))
+  (incf (current-momentum battle combatant) amount)
+  (add-event battle (make-instance 'momentum-gain
+                                   :target combatant
+                                   :amount amount)))
 
 (defmethod current-momentum ((battle battle) combatant)
   (or (gethash combatant (current-momentum-table battle))

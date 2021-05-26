@@ -81,3 +81,19 @@
 (defmethod events-match-p ((x move-use) (y move-use))
   (and (eql (user x) (user y))
        (eql (move x) (move y))))
+
+(defclass momentum-gain (event)
+  ((target :reader target
+           :initarg :target)
+   (amount :reader amount
+           :initarg :amount)))
+
+(defmethod default-message ((event momentum-gain))
+  (format nil
+          "~A gained ~A momentum."
+          (name (target event))
+          (amount event)))
+
+(defmethod events-match-p ((x momentum-gain) (y momentum-gain))
+  (and (eql (target x) (target y))
+       (eql (amount x) (amount y))))
