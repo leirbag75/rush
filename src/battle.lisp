@@ -9,7 +9,9 @@
    (turn-manager :reader turn-manager
                  :writer initialize-turn-manager)
    (remaining-hp-table :reader remaining-hp-table
-                       :initform (make-hash-table))))
+                       :initform (make-hash-table))
+   (current-momentum-table :reader current-momentum-table
+                           :initform (make-hash-table))))
 
 (defmethod initialize-instance :after ((battle battle) &key combatants)
   (initialize-turn-manager (make-instance 'turn-manager :combatants combatants)
@@ -72,3 +74,14 @@
        (add-event battle (make-instance 'move-use :user user :move move))
        (perform-move move battle user target)
     finally (end-turn (turn-manager battle))))
+
+(defmethod add-momentum ((battle battle) combatant amount)
+  (incf (current-momentum battle combatant) amount))
+
+(defmethod current-momentum ((battle battle) combatant)
+  (or (gethash combatant (current-momentum-table battle))
+      (setf (current-momentum battle combatant) 0)))
+
+(defun (setf current-momentum) (amount battle combatant)
+  (setf (gethash combatant (current-momentum-table battle))
+        amount))

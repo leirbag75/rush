@@ -100,3 +100,8 @@
                                         (declare (ignore args))
                                         -->this))))
       (input-moves battle (list (cons move combatant))))))
+
+(deftest adds-momentum (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (add-momentum battle combatant 20)
+    (assert-eql 20 (current-momentum battle combatant))))
