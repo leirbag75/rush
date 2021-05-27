@@ -92,3 +92,12 @@
           "~A gained ~A momentum."
           (name (target event))
           (amount event)))
+
+(defclass enter-rush-mode (event)
+  ((target :reader target
+           :initarg :target)))
+
+(defmethod default-message ((event enter-rush-mode))
+  (format nil
+          "~A entered rush mode."
+          (name (target event))))

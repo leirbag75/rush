@@ -83,7 +83,8 @@
                                    :target combatant
                                    :amount amount))
   (when (>= (current-momentum battle combatant) 140)
-    (setf (in-rush-mode-p battle combatant) t)))
+    (setf (in-rush-mode-p battle combatant) t)
+    (add-event battle (make-instance 'enter-rush-mode :target combatant))))
 
 (defmethod current-momentum ((battle battle) combatant)
   (or (gethash combatant (current-momentum-table battle))

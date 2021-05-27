@@ -119,3 +119,13 @@
     (add-momentum battle combatant 140)
     (unless (in-rush-mode-p battle combatant)
       (error "Combatant did not enter rush mode"))))
+
+(deftest adds-enter-rush-mode-event (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (add-momentum battle combatant 140)
+    (assert-events-match battle
+                         (make-instance 'momentum-gain
+                                        :target combatant
+                                        :amount 140)
+                         (make-instance 'enter-rush-mode
+                                        :target combatant))))
