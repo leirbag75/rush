@@ -20,16 +20,26 @@
   (:method (event1 event2)
     (eql event1 event2)))
 
+(defmethod events-match-p ((x event) (y event))
+  (let ((class-x (class-of x))
+        (class-y (class-of y)))
+    (every (lambda (slot)
+             (equal (slot-value x (slot-definition-name slot))
+                    (slot-value y (slot-definition-name slot))))
+           (class-slots (cond
+                          ((subclassp class-x class-y)
+                           class-y)
+                          ((subclassp class-y class-x)
+                           class-x)
+                          (t
+                           (return-from events-match-p nil)))))))
+
 (defclass damage-infliction (event)
   ((target :reader target
            :initarg :target)
    (amount :reader amount
            :initarg :amount))
   (:default-initargs :target nil :amount 0))
-
-(defmethod events-match-p ((x damage-infliction) (y damage-infliction))
-  (and (eql (target x) (target y))
-       (eql (amount x) (amount y))))
 
 (defmethod default-message ((event damage-infliction))
   (format nil
@@ -42,10 +52,6 @@
            :initarg :target)
    (amount :reader amount
            :initarg :amount)))
-
-(defmethod events-match-p ((x damage-heal) (y damage-heal))
-  (and (eql (target x) (target y))
-       (eql (amount x) (amount y))))
 
 (defmethod default-message ((event damage-heal))
   (format nil
@@ -63,9 +69,6 @@
           "~A died."
           (name (target event))))
 
-(defmethod events-match-p ((x death) (y death))
-  (eql (target x) (target y)))
-
 (defclass move-use (event)
   ((move :reader move
          :initarg :move)
@@ -78,10 +81,6 @@
           (name (user event))
           (name (move event))))
 
-(defmethod events-match-p ((x move-use) (y move-use))
-  (and (eql (user x) (user y))
-       (eql (move x) (move y))))
-
 (defclass momentum-gain (event)
   ((target :reader target
            :initarg :target)
@@ -93,7 +92,3 @@
           "~A gained ~A momentum."
           (name (target event))
           (amount event)))
-
-(defmethod events-match-p ((x momentum-gain) (y momentum-gain))
-  (and (eql (target x) (target y))
-       (eql (amount x) (amount y))))

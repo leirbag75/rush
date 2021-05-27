@@ -2,6 +2,7 @@
 (defsystem "rush"
   :author "Gabriel Johnson <leirbag75@gmail.com>"
   :serial t
+  :depends-on ("closer-mop")
   :components ((:file "package")
                (:module "src"
                 :components ((:file "battle-interface")

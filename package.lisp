@@ -1,3 +1,7 @@
 
 (defpackage :rush
-  (:use :cl))
+  (:use :cl)
+  (:import-from :closer-mop
+                #:class-slots
+                #:slot-definition-name
+                #:subclassp))
