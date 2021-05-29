@@ -13,7 +13,9 @@
    (current-momentum-table :reader current-momentum-table
                            :initform (make-hash-table))
    (rush-mode-table :reader rush-mode-table
-                    :initform (make-hash-table))))
+                    :initform (make-hash-table))
+   (available-actions-table :reader available-actions-table
+                            :initform (make-hash-table))))
 
 (defmethod initialize-instance :after ((battle battle) &key combatants)
   (initialize-turn-manager (make-instance 'turn-manager :combatants combatants)
@@ -99,3 +101,13 @@
 
 (defmethod in-rush-mode-p ((battle battle) combatant)
   (values (gethash combatant (rush-mode-table battle))))
+
+(defmethod subtract-action ((battle battle) combatant &optional (amount 1))
+  (decf (available-actions battle combatant) amount))
+
+(defun (setf available-actions) (amount battle combatant)
+  (setf (gethash combatant (available-actions-table battle)) amount))
+
+(defmethod available-actions ((battle battle) combatant)
+  (or (gethash combatant (available-actions-table battle))
+      (setf (available-actions battle combatant) 2)))

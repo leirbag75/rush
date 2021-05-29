@@ -129,3 +129,9 @@
                                         :amount 140)
                          (make-instance 'enter-rush-mode
                                         :target combatant))))
+
+(deftest subtracts-action (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (subtract-action battle combatant)
+    (assert-eql 1 (available-actions battle combatant))))
+

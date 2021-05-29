@@ -14,3 +14,7 @@
 (defgeneric current-momentum (battle combatant))
 
 (defgeneric in-rush-mode-p (battle combatant))
+
+(defgeneric subtract-action (battle combatant &optional actions))
+
+(defgeneric available-actions (battle combatant))
