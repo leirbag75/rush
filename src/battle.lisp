@@ -103,7 +103,8 @@
   (values (gethash combatant (rush-mode-table battle))))
 
 (defmethod subtract-action ((battle battle) combatant &optional (amount 1))
-  (decf (available-actions battle combatant) amount))
+  (setf (available-actions battle combatant)
+        (max 0 (- (available-actions battle combatant) amount))))
 
 (defun (setf available-actions) (amount battle combatant)
   (setf (gethash combatant (available-actions-table battle)) amount))

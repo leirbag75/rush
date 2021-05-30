@@ -135,3 +135,7 @@
     (subtract-action battle combatant)
     (assert-eql 1 (available-actions battle combatant))))
 
+(deftest actions-stay-at-least-zero (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (subtract-action battle combatant 3)
+    (assert-eql 0 (available-actions battle combatant))))
