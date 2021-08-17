@@ -93,7 +93,7 @@
          (move (make-instance 'mock-move
                               :body (lambda (&rest args)
                                       (declare (ignore args))))))
-    (input-moves battle (list (cons move (list combatant))))
+    (perform-move move battle (next-player-to-move battle) (list combatant))
     (assert-events-match battle
                          (make-instance 'move-use
                                         :move move

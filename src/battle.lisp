@@ -68,6 +68,13 @@
                  (make-instance 'death
                                 :target combatant)))))
 
+(defmethod perform-move :before (move (battle battle) user targets)
+  (add-event battle
+             (make-instance 'move-use
+                            :user user
+                            :move move
+                            :targets targets)))
+
 (defmethod input-moves ((battle battle) moves)
   (loop
     with user = (next-player-to-move battle)
@@ -75,10 +82,6 @@
     for move = (car move-target-pair)
     for targets = (cdr move-target-pair)
     do
-       (add-event battle (make-instance 'move-use
-                                        :user user
-                                        :move move
-                                        :targets targets))
        (perform-move move battle user targets)
     finally (end-turn (turn-manager battle))))
 
