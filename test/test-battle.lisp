@@ -93,11 +93,12 @@
          (move (make-instance 'mock-move
                               :body (lambda (&rest args)
                                       (declare (ignore args))))))
-    (input-moves battle (list (cons move combatant)))
+    (input-moves battle (list (cons move (list combatant))))
     (assert-events-match battle
                          (make-instance 'move-use
                                         :move move
-                                        :user combatant))))
+                                        :user combatant
+                                        :targets (list combatant)))))
 
 (deftest should-call-perform-move (test-battle)
   (should-be-evaluated (-->this) ("perform-move not called")
@@ -107,7 +108,7 @@
                                 :body (lambda (&rest args)
                                         (declare (ignore args))
                                         -->this))))
-      (input-moves battle (list (cons move combatant))))))
+      (input-moves battle (list (cons move (list combatant)))))))
 
 (deftest adds-momentum (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)

@@ -73,10 +73,13 @@
     with user = (next-player-to-move battle)
     for move-target-pair in moves
     for move = (car move-target-pair)
-    for target = (cdr move-target-pair)
+    for targets = (cdr move-target-pair)
     do
-       (add-event battle (make-instance 'move-use :user user :move move))
-       (perform-move move battle user target)
+       (add-event battle (make-instance 'move-use
+                                        :user user
+                                        :move move
+                                        :targets targets))
+       (perform-move move battle user targets)
     finally (end-turn (turn-manager battle))))
 
 (defmethod add-momentum ((battle battle) combatant amount)
