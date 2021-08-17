@@ -73,13 +73,17 @@
   ((move :reader move
          :initarg :move)
    (user :reader user
-         :initarg :user)))
+         :initarg :user)
+   (targets :reader targets
+            :initarg :targets))
+  (:default-initargs :targets '()))
 
 (defmethod default-message ((event move-use))
   (format nil
-          "~A used ~A."
+          "~A used ~A~@[ on ~{~A~#[~; and ~;, ~A, and ~A~:;, ~]~}~]."
           (name (user event))
-          (name (move event))))
+          (name (move event))
+          (mapcar #'name (targets event))))
 
 (defclass momentum-gain (event)
   ((target :reader target
