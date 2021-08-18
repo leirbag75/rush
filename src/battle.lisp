@@ -18,6 +18,9 @@
    (available-actions-table :reader available-actions-table
                             :initform (make-hash-table))))
 
+(defmethod initialize-instance :after ((battle battle) &key turn-manager)
+  (initialize-turn-manager turn-manager battle))
+
 (defmethod next-events ((battle battle))
   (next-events (event-accumulator battle)))
 

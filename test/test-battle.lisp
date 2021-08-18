@@ -22,7 +22,11 @@
 
 (defun make-battle-with-combatants (&rest combatants)
   (make-instance 'battle
-                 :combatants (mapcar #'list combatants)))
+                 :combatants (mapcar #'list combatants)
+                 :turn-manager (make-instance
+                                'mock-turn-manager
+                                :body (lambda (&rest args)
+                                        (declare (ignore args))))))
 
 (defun make-mock-combatant ()
   (make-instance 'mock-combatant))
@@ -145,3 +149,21 @@
     (add-action battle combatant)
     (assert-eql (1+ *default-available-actions*)
                 (available-actions battle combatant))))
+
+(defclass mock-turn-manager ()
+  ((body :reader body
+         :initarg :body)))
+
+(defmethod initialize-turn-manager ((turn-manager mock-turn-manager) battle)
+  (funcall (body turn-manager) turn-manager battle))
+
+(deftest calls-initialize-turn-manager (test-battle)
+  (should-be-evaluated (-->this) ("initialize-turn-manager not called")
+    (let* ((turn-manager (make-instance 'mock-turn-manager
+                                        :body (lambda (&rest args)
+                                                (declare (ignore args))
+                                                -->this)))
+           (combatant (make-mock-combatant)))
+      (make-instance 'battle
+                     :combatants (list (list combatant))
+                     :turn-manager turn-manager))))
