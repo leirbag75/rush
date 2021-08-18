@@ -75,16 +75,6 @@
                             :move move
                             :targets targets)))
 
-(defmethod input-moves ((battle battle) moves)
-  (loop
-    with user = (next-player-to-move battle)
-    for move-target-pair in moves
-    for move = (car move-target-pair)
-    for targets = (cdr move-target-pair)
-    do
-       (perform-move move battle user targets)
-    finally (end-turn (turn-manager battle))))
-
 (defmethod add-momentum ((battle battle) combatant amount)
   (incf (current-momentum battle combatant) amount)
   (add-event battle (make-instance 'momentum-gain

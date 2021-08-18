@@ -100,16 +100,6 @@
                                         :user combatant
                                         :targets (list combatant)))))
 
-(deftest should-call-perform-move (test-battle)
-  (should-be-evaluated (-->this) ("perform-move not called")
-    (let* ((battle (make-test-battle))
-           (combatant (next-player-to-move battle))
-           (move (make-instance 'mock-move
-                                :body (lambda (&rest args)
-                                        (declare (ignore args))
-                                        -->this))))
-      (input-moves battle (list (cons move (list combatant)))))))
-
 (deftest adds-momentum (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (add-momentum battle combatant *small-momentum*)

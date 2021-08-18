@@ -7,8 +7,6 @@
 
 (defgeneric heal-damage (battle combatant amount))
 
-(defgeneric input-moves (battle moves))
-
 (defgeneric add-momentum (battle combatant amount))
 
 (defgeneric current-momentum (battle combatant))
