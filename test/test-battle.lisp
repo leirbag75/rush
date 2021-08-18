@@ -139,3 +139,9 @@
   (multiple-value-bind (battle combatant) (make-test-battle)
     (subtract-action battle combatant (1+ *default-available-actions*))
     (assert-eql 0 (available-actions battle combatant))))
+
+(deftest adds-action (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (add-action battle combatant)
+    (assert-eql (1+ *default-available-actions*)
+                (available-actions battle combatant))))

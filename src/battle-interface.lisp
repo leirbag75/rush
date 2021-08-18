@@ -15,4 +15,6 @@
 
 (defgeneric subtract-action (battle combatant &optional actions))
 
+(defgeneric add-action (battle combatant &optional actions))
+
 (defgeneric available-actions (battle combatant))
