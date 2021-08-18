@@ -88,17 +88,16 @@
   (funcall (body move) battle combatant target))
 
 (deftest should-add-use-move-event (test-battle)
-  (let* ((battle (make-test-battle))
-         (combatant (next-player-to-move battle))
-         (move (make-instance 'mock-move
-                              :body (lambda (&rest args)
-                                      (declare (ignore args))))))
-    (perform-move move battle (next-player-to-move battle) (list combatant))
-    (assert-events-match battle
-                         (make-instance 'move-use
-                                        :move move
-                                        :user combatant
-                                        :targets (list combatant)))))
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (let ((move (make-instance 'mock-move
+                               :body (lambda (&rest args)
+                                       (declare (ignore args))))))
+      (perform-move move battle combatant (list combatant))
+      (assert-events-match battle
+                           (make-instance 'move-use
+                                          :move move
+                                          :user combatant
+                                          :targets (list combatant))))))
 
 (deftest adds-momentum (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)

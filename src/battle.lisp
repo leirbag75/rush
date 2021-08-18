@@ -6,8 +6,9 @@
                :initarg :combatants)
    (event-accumulator :reader event-accumulator
                       :initform (make-instance 'event-accumulator))
+   (next-player-to-move :accessor next-player-to-move)
    (turn-manager :reader turn-manager
-                 :writer initialize-turn-manager)
+                 :initarg :turn-manager)
    (remaining-hp-table :reader remaining-hp-table
                        :initform (make-hash-table))
    (current-momentum-table :reader current-momentum-table
@@ -16,10 +17,6 @@
                     :initform (make-hash-table))
    (available-actions-table :reader available-actions-table
                             :initform (make-hash-table))))
-
-(defmethod initialize-instance :after ((battle battle) &key combatants)
-  (initialize-turn-manager (make-instance 'turn-manager :combatants combatants)
-                           battle))
 
 (defmethod next-events ((battle battle))
   (next-events (event-accumulator battle)))
@@ -53,9 +50,6 @@
 
 (defmethod add-event ((battle battle) event)
   (add-event (event-accumulator battle) event))
-
-(defmethod next-player-to-move ((battle battle))
-  (next-player-to-move (turn-manager battle)))
 
 (defmethod inflict-damage ((battle battle) combatant amount)
   (add-event battle
