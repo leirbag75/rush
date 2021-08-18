@@ -7,11 +7,6 @@
    (combatants-index :accessor combatants-index
                      :initform 0)))
 
-(defmethod initialize-instance :after ((turn-manager turn-manager)
-                                       &key combatants)
-  (initialize-combatants (coerce combatants 'vector)
-                         turn-manager))
-
 (defmethod next-player-to-move ((turn-manager turn-manager))
   (aref (combatants turn-manager) (combatants-index turn-manager)))
 
