@@ -21,7 +21,8 @@
   *mock-combatant-max-hp*)
 
 (defun make-battle-with-combatants (&rest combatants)
-  (make-instance 'battle :combatants combatants))
+  (make-instance 'battle
+                 :combatants (mapcar #'list combatants)))
 
 (defun make-mock-combatant ()
   (make-instance 'mock-combatant))
