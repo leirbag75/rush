@@ -1,4 +1,4 @@
 
 (in-package :rush)
 
-(defgeneric perform-move (move battle combatant target))
+(defgeneric perform-move (move battle user targets))
