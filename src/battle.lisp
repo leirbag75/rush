@@ -108,3 +108,6 @@
 (defmethod available-actions ((battle battle) combatant)
   (or (gethash combatant (available-actions-table battle))
       (setf (available-actions battle combatant) 2)))
+
+(defmethod all-combatants ((battle battle))
+  (reduce #'append (combatants battle) :from-end t))
