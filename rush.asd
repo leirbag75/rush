@@ -9,6 +9,7 @@
                              (:file "event-accumulator-interface")
                              (:file "turn-manager-interface")
                              (:file "move-interface")
+                             (:file "deck-manager-interface")
                              (:file "events")
                              (:file "event-accumulator")
                              (:file "turn-manager")
