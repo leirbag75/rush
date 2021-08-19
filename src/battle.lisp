@@ -6,7 +6,7 @@
                :initarg :combatants)
    (event-accumulator :reader event-accumulator
                       :initform (make-instance 'event-accumulator))
-   (next-player-to-move :accessor next-player-to-move)
+   (next-combatant-to-move :accessor next-combatant-to-move)
    (turn-manager :reader turn-manager
                  :initarg :turn-manager)
    (remaining-hp-table :reader remaining-hp-table
