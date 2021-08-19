@@ -15,3 +15,14 @@
            (setf (aref result k) (aref result to-switch))
            (setf (aref result to-switch) old))
       finally (return (coerce result (type-of deck))))))
+
+(defclass deck-manager ()
+  ((hand-size :reader hand-size
+              :initarg :hand-size)
+   (remaining-deck :accessor remaining-deck)
+   (shuffle-algorithm :reader shuffle-algorithm
+                      :initarg :shuffle-algorithm)))
+
+(defmethod initialize-instance :after ((deck-manager deck-manager)
+                                       &key deck shuffle-algorithm)
+  (setf (remaining-deck deck-manager) (funcall shuffle-algorithm deck)))
