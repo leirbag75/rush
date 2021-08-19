@@ -12,4 +12,6 @@
 
 (defgeneric hand (deck-manager))
 
+(defgeneric remaining-deck (deck-manager))
+
 (defgeneric draw (deck-manager))
