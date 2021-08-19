@@ -4,4 +4,5 @@
   (:import-from :closer-mop
                 #:class-slots
                 #:slot-definition-name
-                #:subclassp))
+                #:subclassp)
+  (:shadow #:speed))
