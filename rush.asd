@@ -13,6 +13,7 @@
                              (:file "events")
                              (:file "event-accumulator")
                              (:file "turn-manager")
+                             (:file "deck-manager")
                              (:file "battle")))
                (:module "test"
                 :components ((:file "framework")
