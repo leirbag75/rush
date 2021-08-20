@@ -111,3 +111,13 @@
 
 (defmethod all-combatants ((battle battle))
   (reduce #'append (combatants battle) :from-end t))
+
+(defmethod allies ((battle battle) combatant)
+  (find-if (lambda (team) (member combatant team))
+           (combatants battle)))
+
+(defmethod enemies ((battle battle) combatant)
+  (reduce #'append
+          (remove-if (lambda (team) (member combatant team))
+                     (combatants battle))
+          :from-end t))

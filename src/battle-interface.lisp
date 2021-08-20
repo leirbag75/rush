@@ -20,3 +20,11 @@
 (defgeneric available-actions (battle combatant))
 
 (defgeneric all-combatants (battle))
+
+(defgeneric allies (battle combatant))
+
+(defgeneric allies-not-self (battle combatant)
+  (:method (battle combatant)
+    (remove combatant (allies battle combatant))))
+
+(defgeneric enemies (battle combatant))
