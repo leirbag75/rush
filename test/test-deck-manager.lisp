@@ -10,7 +10,7 @@
                                      :hand-size *test-hand-size*
                                      :deck *mock-deck*
                                      :shuffle-algorithm #'reverse)))
-    (assert-equal (nthcdr *test-hand-size* (reverse *mock-deck*))
+    (assert-equal (reverse *mock-deck*)
                   (remaining-deck deck-manager))))
 
 (deftest draw-first-cards (test-deck-manager)
