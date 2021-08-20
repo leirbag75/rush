@@ -37,3 +37,15 @@
 (defmethod initialize-instance :after ((deck-manager deck-manager)
                                        &key deck shuffle-algorithm hand-size)
   (setf (remaining-deck deck-manager) (funcall shuffle-algorithm deck)))
+
+(define-condition card-not-in-deck (error)
+  ((card :reader card
+         :initarg :card)
+   (deck-manager :reader deck-manager
+                 :initarg :deck-manager)))
+
+(defmethod discard-card ((deck-manager deck-manager) card)
+  (when (not (member card (remaining-deck deck-manager)))
+    (error 'card-not-in-deck :card card :deck-manager deck-manager))
+  (setf (remaining-deck deck-manager)
+        (remove card (remaining-deck deck-manager) :count 1)))

@@ -5,6 +5,8 @@
 
 (defparameter *mock-deck* '(1 2 3 4 5 6))
 
+(defparameter *card-not-in-deck* (gensym))
+
 (deftest use-shuffle-algorithm (test-deck-manager)
   (let ((deck-manager (make-instance 'deck-manager
                                      :hand-size *test-hand-size*
@@ -21,3 +23,19 @@
     (assert-equal (subseq *mock-deck* 0 *test-hand-size*)
                   (coerce (hand deck-manager) 'list))))
 
+(deftest discard-card-not-in-deck (test-deck-manager)
+  (let ((deck-manager (make-instance 'deck-manager
+                                     :hand-size *test-hand-size*
+                                     :deck *mock-deck*
+                                     :shuffle-algorithm #'identity)))
+    (should-signal (card-not-in-deck) ("Did not throw error")
+      (discard-card deck-manager *card-not-in-deck*))))
+
+(deftest discard-card-base-case (test-deck-manager)
+  (let* ((deck-manager (make-instance 'deck-manager
+                                      :hand-size *test-hand-size*
+                                      :deck *mock-deck*))
+         (deck (remaining-deck deck-manager)))
+    (discard-card deck-manager (first *mock-deck*))
+    (assert-equal (remove (first *mock-deck*) deck)
+                  (remaining-deck deck-manager))))
