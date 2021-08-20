@@ -9,4 +9,6 @@
 
 (defgeneric remaining-deck (deck-manager))
 
+(defgeneric discard-pile (deck-manager))
+
 (defgeneric draw (deck-manager))

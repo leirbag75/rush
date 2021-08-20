@@ -22,6 +22,8 @@
   ((hand-size :reader hand-size
               :initarg :hand-size)
    (remaining-deck :accessor remaining-deck)
+   (discard-pile :accessor discard-pile
+                 :initform '())
    (shuffle-algorithm :reader shuffle-algorithm
                       :initarg :shuffle-algorithm))
   (:default-initargs
@@ -48,4 +50,5 @@
   (when (not (member card (remaining-deck deck-manager)))
     (error 'card-not-in-deck :card card :deck-manager deck-manager))
   (setf (remaining-deck deck-manager)
-        (remove card (remaining-deck deck-manager) :count 1)))
+        (remove card (remaining-deck deck-manager) :count 1))
+  (push card (discard-pile deck-manager)))

@@ -39,3 +39,11 @@
     (discard-card deck-manager (first *mock-deck*))
     (assert-equal (remove (first *mock-deck*) deck)
                   (remaining-deck deck-manager))))
+
+(deftest add-card-to-discard-pile (test-deck-manager)
+  (let* ((deck-manager (make-instance 'deck-manager
+                                      :hand-size *test-hand-size*
+                                      :deck *mock-deck*)))
+    (discard-card deck-manager (first *mock-deck*))
+    (assert-equal (list (first *mock-deck*))
+                  (discard-pile deck-manager))))
