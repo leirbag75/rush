@@ -11,6 +11,7 @@
                              (:file "move-interface")
                              (:file "deck-manager-interface")
                              (:file "combatant-interface")
+                             (:file "subscriber-interface")
                              (:file "events")
                              (:file "event-accumulator")
                              (:file "turn-manager")

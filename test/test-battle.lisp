@@ -167,3 +167,28 @@
       (make-instance 'battle
                      :combatants (list (list combatant))
                      :turn-manager turn-manager))))
+
+(defclass mock-subscriber ()
+  ((body :accessor body
+         :initarg :body)))
+
+(defmethod notify ((subscriber mock-subscriber) event battle)
+  (funcall (body subscriber) subscriber event battle))
+
+;; To allow the objects to be viewed in the debugger
+(define-condition notify-test-failed (error)
+  ((battle :reader battle
+           :initarg :battle)
+   (subscriber :reader subscriber
+               :initarg :subscriber)))
+
+(deftest calls-notify (test-battle)
+  (let ((battle (make-test-battle))
+        (subscriber (make-instance 'mock-subscriber)))
+    (should-be-evaluated (-->this) ('notify-test-failed
+                                    :battle battle
+                                    :subscriber subscriber)
+      (setf (body subscriber)
+            (lambda (&rest args) (declare (ignore args)) -->this))
+      (subscribe battle subscriber)
+      (add-event battle (make-instance 'event)))))

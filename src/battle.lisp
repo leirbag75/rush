@@ -16,7 +16,9 @@
    (rush-mode-table :reader rush-mode-table
                     :initform (make-hash-table))
    (available-actions-table :reader available-actions-table
-                            :initform (make-hash-table))))
+                            :initform (make-hash-table))
+   (subscribers :accessor subscribers
+                :initform '())))
 
 (defmethod initialize-instance :after ((battle battle) &key turn-manager)
   (initialize-turn-manager turn-manager battle))
@@ -52,7 +54,9 @@
                                    :amount amount)))
 
 (defmethod add-event ((battle battle) event)
-  (add-event (event-accumulator battle) event))
+  (add-event (event-accumulator battle) event)
+  (dolist (subscriber (reverse (subscribers battle)))
+    (notify subscriber event battle)))
 
 (defmethod inflict-damage ((battle battle) combatant amount)
   (let ((remaining-hp (deduct-hp battle combatant amount)))
@@ -121,3 +125,6 @@
           (remove-if (lambda (team) (member combatant team))
                      (combatants battle))
           :from-end t))
+
+(defmethod subscribe ((battle battle) subscriber)
+  (push subscriber (subscribers battle)))

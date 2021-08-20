@@ -28,3 +28,5 @@
     (remove combatant (allies battle combatant))))
 
 (defgeneric enemies (battle combatant))
+
+(defgeneric subscribe (battle subscriber))
