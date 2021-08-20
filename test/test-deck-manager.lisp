@@ -10,6 +10,14 @@
                                      :hand-size *test-hand-size*
                                      :deck *mock-deck*
                                      :shuffle-algorithm #'reverse)))
-    (assert-equal (reverse *mock-deck*)
+    (assert-equal (nthcdr *test-hand-size* (reverse *mock-deck*))
                   (remaining-deck deck-manager))))
+
+(deftest draw-first-cards (test-deck-manager)
+  (let ((deck-manager (make-instance 'deck-manager
+                                     :hand-size *test-hand-size*
+                                     :deck *mock-deck*
+                                     :shuffle-algorithm #'identity)))
+    (assert-equal (subseq *mock-deck* 0 *test-hand-size*)
+                  (coerce (hand deck-manager) 'list))))
 
