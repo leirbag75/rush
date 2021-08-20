@@ -33,9 +33,6 @@
 (defmethod hand ((deck-manager deck-manager))
   (subseq (remaining-deck deck-manager) 0 (hand-size deck-manager)))
 
-(defmethod hand-size ((deck-manager deck-manager))
-  (array-dimension (hand deck-manager) 0))
-
 (defmethod initialize-instance :after ((deck-manager deck-manager)
                                        &key deck shuffle-algorithm hand-size)
   (setf (remaining-deck deck-manager) (funcall shuffle-algorithm deck)))
