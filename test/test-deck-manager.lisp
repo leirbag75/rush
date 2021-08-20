@@ -57,3 +57,14 @@
     (discard-card deck-manager 2)
     (assert-equal '(3 4 5 6 2)
                   (hand deck-manager))))
+
+(deftest removes-discard-pile-when-recycling (test-deck-manager)
+  (let ((deck-manager (make-instance 'deck-manager
+                                     :hand-size 5
+                                     :deck '(1 2 3 4 5 6)
+                                     :shuffle-algorithm #'identity)))
+    (discard-card deck-manager 1)
+    (discard-card deck-manager 2)
+    (hand deck-manager)
+    (assert-equal '()
+                  (discard-pile deck-manager))))

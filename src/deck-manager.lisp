@@ -35,7 +35,8 @@
     (setf (remaining-deck deck-manager)
           (append (remaining-deck deck-manager)
                   (funcall (shuffle-algorithm deck-manager)
-                           (discard-pile deck-manager)))))
+                           (discard-pile deck-manager))))
+    (setf (discard-pile deck-manager) '()))
   (subseq (remaining-deck deck-manager) 0 (hand-size deck-manager)))
 
 (defmethod initialize-instance :after ((deck-manager deck-manager)
