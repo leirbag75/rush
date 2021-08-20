@@ -55,11 +55,11 @@
   (add-event (event-accumulator battle) event))
 
 (defmethod inflict-damage ((battle battle) combatant amount)
-  (add-event battle
-             (make-instance 'damage-infliction
-                            :target combatant
-                            :amount amount))
   (let ((remaining-hp (deduct-hp battle combatant amount)))
+    (add-event battle
+               (make-instance 'damage-infliction
+                              :target combatant
+                              :amount amount))
     (when (<= remaining-hp 0)
       (add-event battle
                  (make-instance 'death
