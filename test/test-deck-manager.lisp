@@ -41,9 +41,19 @@
                   (remaining-deck deck-manager))))
 
 (deftest add-card-to-discard-pile (test-deck-manager)
-  (let* ((deck-manager (make-instance 'deck-manager
-                                      :hand-size *test-hand-size*
-                                      :deck *mock-deck*)))
+  (let ((deck-manager (make-instance 'deck-manager
+                                     :hand-size *test-hand-size*
+                                     :deck *mock-deck*)))
     (discard-card deck-manager (first *mock-deck*))
     (assert-equal (list (first *mock-deck*))
                   (discard-pile deck-manager))))
+
+(deftest recycles-cards-when-not-enough (test-deck-manager)
+  (let ((deck-manager (make-instance 'deck-manager
+                                     :hand-size 5
+                                     :deck '(1 2 3 4 5 6)
+                                     :shuffle-algorithm #'identity)))
+    (discard-card deck-manager 1)
+    (discard-card deck-manager 2)
+    (assert-equal '(3 4 5 6 2)
+                  (hand deck-manager))))

@@ -31,6 +31,11 @@
    :hand-size *default-hand-size*))
 
 (defmethod hand ((deck-manager deck-manager))
+  (when (< (length (remaining-deck deck-manager)) (hand-size deck-manager))
+    (setf (remaining-deck deck-manager)
+          (append (remaining-deck deck-manager)
+                  (funcall (shuffle-algorithm deck-manager)
+                           (discard-pile deck-manager)))))
   (subseq (remaining-deck deck-manager) 0 (hand-size deck-manager)))
 
 (defmethod initialize-instance :after ((deck-manager deck-manager)
