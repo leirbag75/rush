@@ -10,6 +10,7 @@
                              (:file "turn-manager-interface")
                              (:file "move-interface")
                              (:file "deck-manager-interface")
+                             (:file "combatant-interface")
                              (:file "events")
                              (:file "event-accumulator")
                              (:file "turn-manager")
