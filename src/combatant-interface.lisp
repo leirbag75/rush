@@ -6,3 +6,5 @@
 (defgeneric speed (combatant))
 
 (defgeneric deck (combatant))
+
+(defgeneric special-moves (combatant))
