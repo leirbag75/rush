@@ -21,4 +21,5 @@
                (:module "test"
                 :components ((:file "framework")
                              (:file "test-event-accumulator")
+                             (:file "test-deck-manager")
                              (:file "test-battle")))))
