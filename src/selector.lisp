@@ -2,13 +2,20 @@
 (in-package :rush)
 
 (define-condition selector-full (error)
-  ())
+  ((selector :reader selector
+             :initarg :selector)
+   (item :reader item
+         :initarg :item)))
 
 (define-condition unselect-empty-selector (error)
-  ())
+  ((selector :reader selector
+             :initarg :selector)))
 
 (define-condition invalid-selection (error)
-  ())
+  ((selector :reader selector
+             :initarg :selector)
+   (item :reader item
+         :initarg :item)))
 
 (defclass selector ()
   ((valid-options :reader %valid-options
@@ -39,16 +46,16 @@
 
 (defmethod select ((selector selector) item)
   (when (selector-fullp selector)
-    (error 'selector-full))
+    (error 'selector-full :selector selector :item item))
   (unless (member (funcall (key selector) item)
                   (valid-options selector)
                   :test (test selector))
-    (error 'invalid-selection))
+    (error 'invalid-selection :selector selector :item item))
   (vector-push item (selections selector)))
 
 (defmethod unselect ((selector selector))
   (when (zerop (length (selections selector)))
-    (error 'unselect-empty-selector))
+    (error 'unselect-empty-selector :selector selector))
   (vector-pop (selections selector)))
 
 (defmethod selected-items ((selector selector))
