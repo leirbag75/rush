@@ -4,6 +4,9 @@
 (define-condition selector-full (error)
   ())
 
+(define-condition unselect-empty-selector (error)
+  ())
+
 (define-condition invalid-selection (error)
   ())
 
@@ -42,6 +45,11 @@
                   :test (test selector))
     (error 'invalid-selection))
   (vector-push item (selections selector)))
+
+(defmethod unselect ((selector selector))
+  (when (zerop (length (selections selector)))
+    (error 'unselect-empty-selector))
+  (vector-pop (selections selector)))
 
 (defmethod selected-items ((selector selector))
   (coerce (selections selector) 'list))
