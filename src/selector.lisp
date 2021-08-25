@@ -8,7 +8,7 @@
   ())
 
 (defclass selector ()
-  ((valid-options :reader valid-options
+  ((valid-options :reader %valid-options
                   :initarg :valid-options)
    (selections :reader selections
                :writer initialize-selections)
@@ -19,6 +19,13 @@
 (defmethod initialize-instance :after ((selector selector) &key selection-count)
   (initialize-selections (make-array selection-count :fill-pointer 0)
                          selector))
+
+(defmethod valid-options ((selector selector))
+  (remove-if (lambda (option)
+               (member option
+                       (selected-items selector)
+                       :test (test selector)))
+             (%valid-options selector)))
 
 (defmethod selector-fullp ((selector selector))
   (zerop (- (array-dimension (selections selector) 0)
