@@ -11,20 +11,23 @@
   ((valid-options :reader valid-options
                   :initarg :valid-options)
    (selections :reader selections
-               :writer initialize-selections)))
+               :writer initialize-selections)
+   (test :reader test
+         :initarg :test))
+  (:default-initargs :test #'eql))
 
 (defmethod initialize-instance :after ((selector selector) &key selection-count)
   (initialize-selections (make-array selection-count :fill-pointer 0)
                          selector))
 
 (defmethod selector-fullp ((selector selector))
-  (eql (length (selections selector))
-       (array-dimension (selections selector) 0)))
+  (zerop (- (array-dimension (selections selector) 0)
+            (length (selections selector)))))
 
 (defmethod select ((selector selector) item)
   (when (selector-fullp selector)
     (error 'selector-full))
-  (unless (member item (valid-options selector))
+  (unless (member item (valid-options selector) :test (test selector))
     (error 'invalid-selection))
   (vector-push item (selections selector)))
 
