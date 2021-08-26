@@ -17,6 +17,7 @@
                              (:file "events")
                              (:file "event-accumulator")
                              (:file "selector")
+                             (:file "move-selector")
                              (:file "turn-manager")
                              (:file "deck-manager")
                              (:file "battle")))
