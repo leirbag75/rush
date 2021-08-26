@@ -2,7 +2,9 @@
 (in-package :rush)
 
 (defclass move-selector ()
-  ((selector :reader selector
+  ((combatant :reader combatant
+              :initarg :combatant)
+   (selector :reader selector
              :writer initialize-selector)
    (selectable-cards :reader %selectable-cards
                      :initarg :selectable-cards)
