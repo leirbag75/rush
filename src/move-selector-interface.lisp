@@ -7,4 +7,8 @@
 
 (defgeneric remaining-move-selections (move-selector))
 
+(defgeneric start-target-selection (move-selector move))
+
 (defgeneric select-move (move-selector move targets))
+
+(defgeneric unselect-move (move-selector))
