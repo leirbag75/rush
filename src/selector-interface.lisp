@@ -8,3 +8,5 @@
 (defgeneric selected-items (selector))
 
 (defgeneric selector-fullp (selector))
+
+(defgeneric remaining-selections (selector))

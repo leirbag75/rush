@@ -40,9 +40,12 @@
                        :key (key selector)))
              (%valid-options selector)))
 
+(defmethod remaining-selections ((selector selector))
+  (- (array-dimension (selections selector) 0)
+     (length (selections selector))))
+
 (defmethod selector-fullp ((selector selector))
-  (zerop (- (array-dimension (selections selector) 0)
-            (length (selections selector)))))
+  (zerop (remaining-selections selector)))
 
 (defmethod select ((selector selector) item)
   (when (selector-fullp selector)
