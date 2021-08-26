@@ -11,4 +11,6 @@
 
 (defgeneric select-move (move-selector move targets))
 
+(defgeneric selected-moves (move-selector))
+
 (defgeneric unselect-move (move-selector))

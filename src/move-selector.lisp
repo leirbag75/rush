@@ -39,3 +39,6 @@
 
 (defmethod remaining-move-selections ((move-selector move-selector))
   (remaining-selections (selector move-selector)))
+
+(defmethod selected-moves ((move-selector move-selector))
+  (selected-items (selector move-selector)))
