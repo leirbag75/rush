@@ -20,7 +20,8 @@
    (deck-manager-table :reader deck-manager-table
                        :initform (make-hash-table))
    (subscribers :accessor subscribers
-                :initform '())))
+                :initform '()))
+  (:default-initargs :turn-manager (make-instance 'turn-manager)))
 
 (defmethod initialize-instance :after ((battle battle) &key turn-manager)
   (initialize-turn-manager turn-manager battle)
