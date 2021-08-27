@@ -105,3 +105,12 @@
   (format nil
           "~A entered rush mode."
           (name (target event))))
+
+(defclass exit-rush-mode (event)
+  ((target :reader target
+           :initarg :target)))
+
+(defmethod default-message ((event exit-rush-mode))
+  (format nil
+          "~A exited rush mode."
+          (name (target event))))
