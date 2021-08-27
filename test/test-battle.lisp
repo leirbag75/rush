@@ -197,3 +197,19 @@
             (lambda (&rest args) (declare (ignore args)) -->this))
       (subscribe battle subscriber)
       (add-event battle (make-instance 'event)))))
+
+(deftest leave-rush-mode-null-case (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (leave-rush-mode battle combatant)
+    ;; Shouldn't have any events
+    (assert-events-match battle)))
+
+(deftest leave-rush-mode-base-case (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (add-momentum battle combatant *max-momentum*)
+    (next-events battle)
+    (leave-rush-mode battle combatant)
+    (when (in-rush-mode-p battle combatant)
+      (error "Combatant still in rush mode after calling leave-rush-mode"))
+    (assert-events-match battle
+                         (make-instance 'exit-rush-mode :target combatant))))

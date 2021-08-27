@@ -109,6 +109,11 @@
 (defmethod in-rush-mode-p ((battle battle) combatant)
   (values (gethash combatant (rush-mode-table battle))))
 
+(defmethod leave-rush-mode ((battle battle) combatant)
+  (when (in-rush-mode-p battle combatant)
+    (setf (in-rush-mode-p battle combatant) nil)
+    (add-event battle (make-instance 'exit-rush-mode :target combatant))))
+
 (defmethod subtract-action ((battle battle) combatant &optional (amount 1))
   (setf (available-actions battle combatant)
         (max 0 (- (available-actions battle combatant) amount))))

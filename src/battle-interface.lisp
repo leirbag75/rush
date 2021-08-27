@@ -15,6 +15,8 @@
 
 (defgeneric in-rush-mode-p (battle combatant))
 
+(defgeneric leave-rush-mode (battle combatant))
+
 (defgeneric subtract-action (battle combatant &optional actions))
 
 (defgeneric add-action (battle combatant &optional actions))
