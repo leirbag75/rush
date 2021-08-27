@@ -17,11 +17,17 @@
                     :initform (make-hash-table))
    (available-actions-table :reader available-actions-table
                             :initform (make-hash-table))
+   (deck-manager-table :reader deck-manager-table
+                       :initform (make-hash-table))
    (subscribers :accessor subscribers
                 :initform '())))
 
 (defmethod initialize-instance :after ((battle battle) &key turn-manager)
-  (initialize-turn-manager turn-manager battle))
+  (initialize-turn-manager turn-manager battle)
+  (loop
+    for combatant in (all-combatants battle)
+    do (setf (get-deck-manager battle combatant)
+             (make-instance 'deck-manager :deck (deck combatant)))))
 
 (defmethod next-events ((battle battle))
   (next-events (event-accumulator battle)))
@@ -112,6 +118,17 @@
 (defmethod available-actions ((battle battle) combatant)
   (or (gethash combatant (available-actions-table battle))
       (setf (available-actions battle combatant) 2)))
+
+;; Don't normally use names starting with "get," but unfortunately,
+;; deck-manager is already being used as a reader for an error class
+(defun get-deck-manager (battle combatant)
+  (values (gethash combatant (deck-manager-table battle))))
+
+(defun (setf get-deck-manager) (deck-manager battle combatant)
+  (setf (gethash combatant (deck-manager-table battle)) deck-manager))
+
+(defun draw (battle combatant)
+  (hand (get-deck-manager battle combatant)))
 
 (defmethod all-combatants ((battle battle))
   (reduce #'append (combatants battle) :from-end t))

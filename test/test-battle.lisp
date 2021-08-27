@@ -5,6 +5,8 @@
 
 (defparameter *mock-combatant-max-hp* 200)
 
+(defparameter *mock-combatant-deck* '(1 2 3 4 5 6 7 8 9 10))
+
 (define-symbol-macro *weak-damage* (floor *mock-combatant-max-hp* 10))
 
 (defparameter *max-momentum* 140)
@@ -19,6 +21,9 @@
 
 (defmethod max-hp ((combatant mock-combatant))
   *mock-combatant-max-hp*)
+
+(defmethod deck ((combatant mock-combatant))
+  *mock-combatant-deck*)
 
 (defun make-battle-with-combatants (&rest combatants)
   (make-instance 'battle
