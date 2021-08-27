@@ -9,6 +9,8 @@
 
 (defgeneric add-momentum (battle combatant amount))
 
+(defgeneric reset-momentum (battle combatant))
+
 (defgeneric current-momentum (battle combatant))
 
 (defgeneric in-rush-mode-p (battle combatant))
