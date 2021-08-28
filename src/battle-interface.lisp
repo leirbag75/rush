@@ -23,6 +23,8 @@
 
 (defgeneric available-actions (battle combatant))
 
+(defgeneric perform-event (battle event))
+
 (defgeneric all-combatants (battle))
 
 (defgeneric allies (battle combatant))
