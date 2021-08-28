@@ -114,3 +114,29 @@
   (format nil
           "~A exited rush mode."
           (name (target event))))
+
+(defclass action-gain (event)
+  ((target :reader target
+           :initarg :target)
+   (amount :reader amount
+           :initarg :amount))
+  (:default-initargs :amount 1))
+
+(defmethod default-message ((event action-gain))
+  (format nil
+          "~A gained ~D action~:P."
+          (name (target event))
+          (amount event)))
+
+(defclass action-loss (event)
+  ((target :reader target
+           :initarg :target)
+   (amount :reader amount
+           :initarg :amount))
+  (:default-initargs :amount 1))
+
+(defmethod default-message ((event action-loss))
+  (format nil
+          "~A lost ~D action~:P."
+          (name (target event))
+          (amount event)))
