@@ -74,12 +74,22 @@
                      (make-instance 'damage-infliction
                                     :target combatant
                                     :amount (/ *mock-combatant-max-hp* 2)))
-      (heal-damage battle combatant (/ *mock-combatant-max-hp* 4))
+      (perform-event battle
+                     (make-instance 'damage-heal
+                                    :target combatant
+                                    :amount (/ *mock-combatant-max-hp* 4)))
       (assert-eql remaining-hp (remaining-hp battle combatant)))))
 
 (deftest keeps-hp-at-most-max (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (heal-damage battle combatant *weak-damage*)
+    (perform-event battle
+                   (make-instance 'damage-infliction
+                                  :target combatant
+                                  :amount *weak-damage*))
+    (perform-event battle
+                   (make-instance 'damage-heal
+                                  :target combatant
+                                  :amount (* 2 *weak-damage*)))
     (assert-eql *mock-combatant-max-hp* (remaining-hp battle combatant))))
 
 (deftest adds-damage-heal-event (test-battle)
