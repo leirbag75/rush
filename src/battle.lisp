@@ -66,11 +66,15 @@
     (notify subscriber event battle)))
 
 (defmethod inflict-damage ((battle battle) combatant amount)
-  (let ((remaining-hp (deduct-hp battle combatant amount)))
-    (add-event battle
-               (make-instance 'damage-infliction
-                              :target combatant
-                              :amount amount))
+  (add-event battle
+             (make-instance 'damage-infliction
+                            :target combatant
+                            :amount amount)))
+
+(defmethod perform-event ((battle battle) (event damage-infliction))
+  (let* ((combatant (target event))
+         (amount (amount event))
+         (remaining-hp (deduct-hp battle combatant amount)))
     (when (<= remaining-hp 0)
       (add-event battle
                  (make-instance 'death

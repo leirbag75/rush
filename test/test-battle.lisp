@@ -45,12 +45,18 @@
 (deftest subtracts-hp (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (let ((remaining-hp (- *mock-combatant-max-hp* *weak-damage*)))
-      (inflict-damage battle combatant *weak-damage*)
+      (perform-event battle
+                     (make-instance 'damage-infliction
+                                    :target combatant
+                                    :amount *weak-damage*))
       (assert-eql remaining-hp (remaining-hp battle combatant)))))
 
 (deftest keeps-hp-at-least-0 (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (inflict-damage battle combatant (* 2 *mock-combatant-max-hp*))
+    (perform-event battle
+                   (make-instance 'damage-infliction
+                                  :target combatant
+                                  :amount (* 2 *mock-combatant-max-hp*)))
     (assert-eql 0 (remaining-hp battle combatant))))
 
 (deftest adds-damage-infliction-event (test-battle)
@@ -64,7 +70,10 @@
 (deftest adds-hp (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (let ((remaining-hp (* *mock-combatant-max-hp* 3/4)))
-      (inflict-damage battle combatant (/ *mock-combatant-max-hp* 2))
+      (perform-event battle
+                     (make-instance 'damage-infliction
+                                    :target combatant
+                                    :amount (/ *mock-combatant-max-hp* 2)))
       (heal-damage battle combatant (/ *mock-combatant-max-hp* 4))
       (assert-eql remaining-hp (remaining-hp battle combatant)))))
 
@@ -83,11 +92,11 @@
 
 (deftest battle-death (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (inflict-damage battle combatant *mock-combatant-max-hp*)
+    (perform-event battle
+                   (make-instance 'damage-infliction
+                                  :target combatant
+                                  :amount *mock-combatant-max-hp*))
     (assert-events-match battle
-                         (make-instance 'damage-infliction
-                                        :target combatant
-                                        :amount *mock-combatant-max-hp*)
                          (make-instance 'death :target combatant))))
 
 (defclass mock-move ()
