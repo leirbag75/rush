@@ -123,11 +123,27 @@
     (add-event battle (make-instance 'exit-rush-mode :target combatant))))
 
 (defmethod subtract-action ((battle battle) combatant &optional (amount 1))
-  (setf (available-actions battle combatant)
-        (max 0 (- (available-actions battle combatant) amount))))
+  (add-event battle
+             (make-instance 'action-loss
+                            :target combatant
+                            :amount amount)))
+
+(defmethod perform-event ((battle battle) (event action-loss))
+  (let ((combatant (target event))
+        (amount (amount event)))
+    (setf (available-actions battle combatant)
+          (max 0 (- (available-actions battle combatant) amount)))))
 
 (defmethod add-action ((battle battle) combatant &optional (amount 1))
-  (incf (available-actions battle combatant) amount))
+  (add-event battle
+             (make-instance 'action-gain
+                            :target combatant
+                            :amount amount)))
+
+(defmethod perform-event ((battle battle) (event action-gain))
+  (let ((combatant (target event))
+        (amount (amount event)))
+    (incf (available-actions battle combatant) amount)))
 
 (defun (setf available-actions) (amount battle combatant)
   (setf (gethash combatant (available-actions-table battle)) amount))

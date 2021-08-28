@@ -166,20 +166,38 @@
 
 (deftest subtracts-action (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (subtract-action battle combatant)
+    (perform-event battle (make-instance 'action-loss :target combatant))
     (assert-eql (1- *default-available-actions*)
                 (available-actions battle combatant))))
 
+(deftest adds-action-loss-event (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (subtract-action battle combatant)
+    (assert-events-match battle
+                         (make-instance 'action-loss
+                                        :target combatant))))
+
 (deftest actions-stay-at-least-zero (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (subtract-action battle combatant (1+ *default-available-actions*))
+    (perform-event battle
+                   (make-instance 'action-loss
+                                  :target combatant
+                                  :amount  (1+ *default-available-actions*)))
     (assert-eql 0 (available-actions battle combatant))))
 
 (deftest adds-action (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (add-action battle combatant)
+    (perform-event battle
+                   (make-instance 'action-gain :target combatant))
     (assert-eql (1+ *default-available-actions*)
                 (available-actions battle combatant))))
+
+(deftest adds-action-gain-event (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (add-action battle combatant)
+    (assert-events-match battle
+                         (make-instance 'action-gain
+                                        :target combatant))))
 
 (defclass mock-turn-manager ()
   ((body :reader body
