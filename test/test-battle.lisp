@@ -147,10 +147,7 @@
 
 (deftest enters-rush-mode (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (perform-event battle
-                   (make-instance 'momentum-gain
-                                  :target combatant
-                                  :amount *max-momentum*))
+    (perform-event battle (make-instance 'enter-rush-mode :target combatant))
     (unless (in-rush-mode-p battle combatant)
       (error "Combatant did not enter rush mode"))))
 
@@ -250,13 +247,7 @@
 
 (deftest leave-rush-mode-base-case (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (perform-event battle
-                   (make-instance 'momentum-gain
-                                  :target combatant
-                                  :amount *max-momentum*))
-    (next-events battle)
+    (perform-event battle (make-instance 'enter-rush-mode :target combatant))
     (leave-rush-mode battle combatant)
-    (when (in-rush-mode-p battle combatant)
-      (error "Combatant still in rush mode after calling leave-rush-mode"))
     (assert-events-match battle
                          (make-instance 'exit-rush-mode :target combatant))))

@@ -97,8 +97,10 @@
         (amount (amount event)))
     (incf (current-momentum battle combatant) amount)
     (when (>= (current-momentum battle combatant) 140)
-      (setf (in-rush-mode-p battle combatant) t)
       (add-event battle (make-instance 'enter-rush-mode :target combatant)))))
+
+(defmethod perform-event ((battle battle) (event enter-rush-mode))
+  (setf (in-rush-mode-p battle (target event)) t))
 
 (defmethod reset-momentum ((battle battle) combatant)
   (setf (current-momentum battle combatant) 0))
@@ -119,8 +121,10 @@
 
 (defmethod leave-rush-mode ((battle battle) combatant)
   (when (in-rush-mode-p battle combatant)
-    (setf (in-rush-mode-p battle combatant) nil)
     (add-event battle (make-instance 'exit-rush-mode :target combatant))))
+
+(defmethod perform-event ((battle battle) (event exit-rush-mode))
+  (setf (in-rush-mode-p battle (target event)) nil))
 
 (defmethod subtract-action ((battle battle) combatant &optional (amount 1))
   (add-event battle
