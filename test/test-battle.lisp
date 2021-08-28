@@ -116,17 +116,18 @@
 (defmethod perform-move ((move mock-move) battle combatant target)
   (funcall (body move) battle combatant target))
 
-(deftest should-add-use-move-event (test-battle)
-  (multiple-value-bind (battle combatant) (make-test-battle)
-    (let ((move (make-instance 'mock-move
-                               :body (lambda (&rest args)
-                                       (declare (ignore args))))))
-      (perform-move move battle combatant (list combatant))
-      (assert-events-match battle
-                           (make-instance 'move-use
-                                          :move move
-                                          :user combatant
-                                          :targets (list combatant))))))
+(deftest should-call-perform-move (test-battle)
+  (should-be-evaluated (-->this) ("Perform-move not called")
+    (multiple-value-bind (battle combatant) (make-test-battle)
+      (let ((move (make-instance 'mock-move
+                                 :body (lambda (&rest args)
+                                         (declare (ignore args))
+                                         -->this))))
+        (perform-event battle
+                       (make-instance 'move-use
+                                      :user combatant
+                                      :targets '()
+                                      :move move))))))
 
 (deftest adds-momentum (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)

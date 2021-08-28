@@ -84,12 +84,8 @@
                  (make-instance 'death
                                 :target combatant)))))
 
-(defmethod perform-move :before (move (battle battle) user targets)
-  (add-event battle
-             (make-instance 'move-use
-                            :user user
-                            :move move
-                            :targets targets)))
+(defmethod perform-event ((battle battle) (event move-use))
+  (perform-move (move event) battle (user event) (targets event)))
 
 (defmethod add-momentum ((battle battle) combatant amount)
   (incf (current-momentum battle combatant) amount)
