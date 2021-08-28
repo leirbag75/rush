@@ -131,7 +131,10 @@
 
 (deftest adds-momentum (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (add-momentum battle combatant *small-momentum*)
+    (perform-event battle
+                   (make-instance 'momentum-gain
+                                  :target combatant
+                                  :amount *small-momentum*))
     (assert-eql *small-momentum* (current-momentum battle combatant))))
 
 (deftest adds-momentum-gain-event (test-battle)
@@ -144,17 +147,20 @@
 
 (deftest enters-rush-mode (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (add-momentum battle combatant *max-momentum*)
+    (perform-event battle
+                   (make-instance 'momentum-gain
+                                  :target combatant
+                                  :amount *max-momentum*))
     (unless (in-rush-mode-p battle combatant)
       (error "Combatant did not enter rush mode"))))
 
 (deftest adds-enter-rush-mode-event (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (add-momentum battle combatant *max-momentum*)
+    (perform-event battle
+                   (make-instance 'momentum-gain
+                                  :target combatant
+                                  :amount *max-momentum*))
     (assert-events-match battle
-                         (make-instance 'momentum-gain
-                                        :target combatant
-                                        :amount *max-momentum*)
                          (make-instance 'enter-rush-mode
                                         :target combatant))))
 
@@ -226,7 +232,10 @@
 
 (deftest leave-rush-mode-base-case (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
-    (add-momentum battle combatant *max-momentum*)
+    (perform-event battle
+                   (make-instance 'momentum-gain
+                                  :target combatant
+                                  :amount *max-momentum*))
     (next-events battle)
     (leave-rush-mode battle combatant)
     (when (in-rush-mode-p battle combatant)

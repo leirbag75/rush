@@ -88,13 +88,17 @@
   (perform-move (move event) battle (user event) (targets event)))
 
 (defmethod add-momentum ((battle battle) combatant amount)
-  (incf (current-momentum battle combatant) amount)
   (add-event battle (make-instance 'momentum-gain
                                    :target combatant
-                                   :amount amount))
-  (when (>= (current-momentum battle combatant) 140)
-    (setf (in-rush-mode-p battle combatant) t)
-    (add-event battle (make-instance 'enter-rush-mode :target combatant))))
+                                   :amount amount)))
+
+(defmethod perform-event ((battle battle) (event momentum-gain))
+  (let ((combatant (target event))
+        (amount (amount event)))
+    (incf (current-momentum battle combatant) amount)
+    (when (>= (current-momentum battle combatant) 140)
+      (setf (in-rush-mode-p battle combatant) t)
+      (add-event battle (make-instance 'enter-rush-mode :target combatant)))))
 
 (defmethod reset-momentum ((battle battle) combatant)
   (setf (current-momentum battle combatant) 0))
