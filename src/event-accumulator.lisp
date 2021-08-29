@@ -33,7 +33,7 @@
                        ;; being returned, the preempted-event comes
                        ;; *first*
                        (if (eql event preempted-event)
-                           (list preempted-event preempting-event)
+                           (list event preempting-event)
                            (list event))))))
 
 (defmethod postempt-event ((event-accumulator event-accumulator)
@@ -45,5 +45,5 @@
                 :from-end t
                 :key (lambda (event)
                        (if (eql event postempted-event)
-                           (list postempting-event postempted-event)
+                           (list postempting-event event)
                            (list event))))))
