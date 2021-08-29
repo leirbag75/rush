@@ -33,3 +33,12 @@
     (preempt-event event-accumulator 3 2)
     (assert-events-match event-accumulator
                          1 2 3)))
+
+(deftest adds-postempting-event-after-postempted (test-event-accumulator)
+  (let ((event-accumulator (make-instance 'event-accumulator)))
+    (add-event event-accumulator 1)
+    (add-event event-accumulator 2)
+    (add-event event-accumulator 4)
+    (postempt-event event-accumulator 2 3)
+    (assert-events-match event-accumulator
+                         1 2 3 4)))
