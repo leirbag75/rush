@@ -34,6 +34,10 @@
                           (t
                            (return-from events-match-p nil)))))))
 
+(defclass negated-event (event)
+  ((event :reader event
+          :initarg :event)))
+
 (defclass damage-infliction (event)
   ((target :reader target
            :initarg :target)
