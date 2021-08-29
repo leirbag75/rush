@@ -140,3 +140,12 @@
           "~A lost ~D action~:P."
           (name (target event))
           (amount event)))
+
+(defclass momentum-reset (event)
+  ((target :reader target
+           :initarg :target)))
+
+(defmethod default-message ((event momentum-reset))
+  (format nil
+          "~A lost momentum."
+          (name (target event))))
