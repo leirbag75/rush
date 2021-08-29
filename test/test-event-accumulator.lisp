@@ -42,3 +42,12 @@
     (postempt-event event-accumulator 2 3)
     (assert-events-match event-accumulator
                          1 2 3 4)))
+
+(deftest adds-event-even-if-negated (test-event-accumulator)
+  (let ((event-accumulator (make-instance 'event-accumulator)))
+    (add-event event-accumulator 1)
+    (negate-event event-accumulator 1)
+    (preempt-event event-accumulator 1 0)
+    (postempt-event event-accumulator 1 2)
+    (assert-events-match event-accumulator
+                         0 (make-instance 'negated-event :event 1) 2)))

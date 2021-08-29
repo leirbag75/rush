@@ -18,6 +18,11 @@
                     event
                     (events event-accumulator))))
 
+(defun unnegated (event)
+  (typecase event
+    (negated-event (event event))
+    (otherwise event)))
+
 (defmethod preempt-event ((event-accumulator event-accumulator)
                           preempted-event
                           preempting-event)
@@ -32,7 +37,7 @@
                        ;; Since the event list is reversed before
                        ;; being returned, the preempted-event comes
                        ;; *first*
-                       (if (eql event preempted-event)
+                       (if (eql (unnegated event) preempted-event)
                            (list event preempting-event)
                            (list event))))))
 
@@ -44,6 +49,6 @@
                 (events event-accumulator)
                 :from-end t
                 :key (lambda (event)
-                       (if (eql event postempted-event)
+                       (if (eql (unnegated event) postempted-event)
                            (list postempting-event event)
                            (list event))))))
