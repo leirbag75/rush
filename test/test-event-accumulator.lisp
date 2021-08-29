@@ -17,3 +17,11 @@
     (add-event event-accumulator 1)
     (next-events event-accumulator)
     (assert-events-match event-accumulator)))
+
+(deftest replaces-event-with-negated-event (test-event-accumulator)
+  (let ((event-accumulator (make-instance 'event-accumulator)))
+    (add-event event-accumulator 1)
+    (negate-event event-accumulator 1)
+    (assert-events-match event-accumulator
+                         (make-instance 'negated-event
+                                        :event 1))))

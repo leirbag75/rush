@@ -11,3 +11,9 @@
 
 (defmethod add-event ((event-accumulator event-accumulator) event)
   (push event (events event-accumulator)))
+
+(defmethod negate-event ((event-accumulator event-accumulator) event)
+  (setf (events event-accumulator)
+        (substitute (make-instance 'negated-event :event event)
+                    event
+                    (events event-accumulator))))
