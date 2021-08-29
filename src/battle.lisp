@@ -85,20 +85,28 @@
                  (max-hp combatant)))))
 
 (defmethod add-event ((battle battle) event)
-  (add-event (incoming-event-accumulator battle) event)
-  (dolist (subscriber (reverse (subscribers battle)))
-    (notify subscriber event battle)))
+  (add-event (incoming-event-accumulator battle) event))
 
 (defmethod commit-changes ((battle battle))
-  (loop
-    for events = (next-events (incoming-event-accumulator battle))
-    while events
-    do
-       (loop
-         for event in events
-         do
-            (perform-event battle event)
-            (add-event (outgoing-event-accumulator battle) event))))
+  (labels ((process-event (event)
+             (loop
+               initially
+                  (dolist (subscriber (reverse (subscribers battle)))
+                    (notify subscriber event battle))
+               for next-event = (peek-event (incoming-event-accumulator battle))
+               until (eql (unnegated next-event) event)
+               do
+                  (process-event next-event)
+               finally
+                  (perform-event battle
+                                 (peek-event
+                                  (incoming-event-accumulator battle)))
+                  (add-event (outgoing-event-accumulator battle)
+                             (pop-event (incoming-event-accumulator battle))))))
+    (loop
+      for event = (peek-event (incoming-event-accumulator battle))
+      while event
+      do (process-event event))))
 
 (defmethod inflict-damage ((battle battle) combatant amount)
   (add-event battle

@@ -235,6 +235,13 @@
    (subscriber :reader subscriber
                :initarg :subscriber)))
 
+(defclass mock-event ()
+  ())
+
+(defmethod perform-event (battle (event mock-event))
+  ;; Do nothing
+  )
+
 (deftest calls-notify (test-battle)
   (let ((battle (make-test-battle))
         (subscriber (make-instance 'mock-subscriber)))
@@ -244,7 +251,8 @@
       (setf (body subscriber)
             (lambda (&rest args) (declare (ignore args)) -->this))
       (subscribe battle subscriber)
-      (add-event battle (make-instance 'event)))))
+      (add-event battle (make-instance 'mock-event))
+      (commit-changes battle))))
 
 (deftest leave-rush-mode-null-case (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
