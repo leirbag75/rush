@@ -36,6 +36,19 @@
 (defmethod next-events ((battle battle))
   (next-events (outgoing-event-accumulator battle)))
 
+(defmethod negate-event ((battle battle) event)
+  (negate-event (incoming-event-accumulator battle) event))
+
+(defmethod preempt-event ((battle battle) preempted-event preempting-event)
+  (preempt-event (incoming-event-accumulator battle)
+                 preempted-event
+                 preempting-event))
+
+(defmethod postempt-event ((battle battle) postempted-event postempting-event)
+  (postempt-event (incoming-event-accumulator battle)
+                  postempted-event
+                  postempting-event))
+
 (defmethod remaining-hp ((battle battle) combatant)
   (or (gethash combatant (remaining-hp-table battle))
       (setf (remaining-hp battle combatant)
