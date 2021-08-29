@@ -25,6 +25,8 @@
 
 (defgeneric perform-event (battle event))
 
+(defgeneric commit-changes (battle))
+
 (defgeneric all-combatants (battle))
 
 (defgeneric allies (battle combatant))

@@ -62,6 +62,7 @@
 (deftest adds-damage-infliction-event (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (inflict-damage battle combatant *weak-damage*)
+    (commit-changes battle)
     (assert-events-match battle
                          (make-instance 'damage-infliction
                                         :target combatant
@@ -95,6 +96,7 @@
 (deftest adds-damage-heal-event (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (heal-damage battle combatant *weak-damage*)
+    (commit-changes battle)
     (assert-events-match battle
                          (make-instance 'damage-heal
                                         :target combatant
@@ -106,6 +108,7 @@
                    (make-instance 'damage-infliction
                                   :target combatant
                                   :amount *mock-combatant-max-hp*))
+    (commit-changes battle)
     (assert-events-match battle
                          (make-instance 'death :target combatant))))
 
@@ -140,6 +143,7 @@
 (deftest adds-momentum-gain-event (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (add-momentum battle combatant *small-momentum*)
+    (commit-changes battle)
     (assert-events-match battle
                          (make-instance 'momentum-gain
                                         :target combatant
@@ -157,6 +161,7 @@
                    (make-instance 'momentum-gain
                                   :target combatant
                                   :amount *max-momentum*))
+    (commit-changes battle)
     (assert-events-match battle
                          (make-instance 'enter-rush-mode
                                         :target combatant))))
@@ -170,6 +175,7 @@
 (deftest adds-action-loss-event (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (subtract-action battle combatant)
+    (commit-changes battle)
     (assert-events-match battle
                          (make-instance 'action-loss
                                         :target combatant))))
@@ -192,6 +198,7 @@
 (deftest adds-action-gain-event (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (add-action battle combatant)
+    (commit-changes battle)
     (assert-events-match battle
                          (make-instance 'action-gain
                                         :target combatant))))
@@ -242,6 +249,7 @@
 (deftest leave-rush-mode-null-case (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (leave-rush-mode battle combatant)
+    (commit-changes battle)
     ;; Shouldn't have any events
     (assert-events-match battle)))
 
@@ -249,12 +257,14 @@
   (multiple-value-bind (battle combatant) (make-test-battle)
     (perform-event battle (make-instance 'enter-rush-mode :target combatant))
     (leave-rush-mode battle combatant)
+    (commit-changes battle)
     (assert-events-match battle
                          (make-instance 'exit-rush-mode :target combatant))))
 
 (deftest adds-reset-momentum-event (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (reset-momentum battle combatant)
+    (commit-changes battle)
     (assert-events-match battle
                          (make-instance 'momentum-reset :target combatant))))
 
