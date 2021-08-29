@@ -2,21 +2,31 @@
 (in-package :rush)
 
 (defclass event-accumulator ()
-  ((events :accessor events
-           :initform '())))
+  ((queue-front :accessor queue-front
+                :initform '())
+   (queue-back :accessor queue-back
+               :initform '())))
+
+(defun slink (event-accumulator)
+  (setf (queue-front event-accumulator)
+        (append (queue-front event-accumulator)
+                (reverse (queue-back event-accumulator))))
+  (setf (queue-back event-accumulator) '()))
 
 (defmethod next-events ((event-accumulator event-accumulator))
-  (prog1 (reverse (events event-accumulator))
-    (setf (events event-accumulator) '())))
+  (slink event-accumulator)
+  (prog1 (queue-front event-accumulator)
+    (setf (queue-front event-accumulator) '())))
 
 (defmethod add-event ((event-accumulator event-accumulator) event)
-  (push event (events event-accumulator)))
+  (push event (queue-back event-accumulator)))
 
 (defmethod negate-event ((event-accumulator event-accumulator) event)
-  (setf (events event-accumulator)
+  (slink event-accumulator)
+  (setf (queue-front event-accumulator)
         (substitute (make-instance 'negated-event :event event)
                     event
-                    (events event-accumulator))))
+                    (queue-front event-accumulator))))
 
 (defun unnegated (event)
   (typecase event
@@ -26,29 +36,31 @@
 (defmethod preempt-event ((event-accumulator event-accumulator)
                           preempted-event
                           preempting-event)
-  (setf (events event-accumulator)
+  (slink event-accumulator)
+  (setf (queue-front event-accumulator)
         ;; Sorry to write something like this, but this was the most
         ;; obvious way for me to do it... (Basically, it's using the
         ;; list monad)
         (reduce #'nconc
-                (events event-accumulator)
+                (queue-front event-accumulator)
                 :from-end t
                 :key (lambda (event)
                        ;; Since the event list is reversed before
                        ;; being returned, the preempted-event comes
                        ;; *first*
                        (if (eql (unnegated event) preempted-event)
-                           (list event preempting-event)
+                           (list preempting-event event)
                            (list event))))))
 
 (defmethod postempt-event ((event-accumulator event-accumulator)
                            postempted-event postempting-event)
-  (setf (events event-accumulator)
+  (slink event-accumulator)
+  (setf (queue-front event-accumulator)
         ;; See comments above
         (reduce #'nconc
-                (events event-accumulator)
+                (queue-front event-accumulator)
                 :from-end t
                 :key (lambda (event)
                        (if (eql (unnegated event) postempted-event)
-                           (list postempting-event event)
+                           (list event postempting-event)
                            (list event))))))
