@@ -49,6 +49,10 @@
                   postempted-event
                   postempting-event))
 
+(defmethod perform-event ((battle battle) (event negated-event))
+  ;; Do nothing
+  )
+
 (defmethod remaining-hp ((battle battle) combatant)
   (or (gethash combatant (remaining-hp-table battle))
       (setf (remaining-hp battle combatant)
