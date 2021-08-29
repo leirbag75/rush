@@ -39,6 +39,7 @@
 (defmethod postempt-event ((event-accumulator event-accumulator)
                            postempted-event postempting-event)
   (setf (events event-accumulator)
+        ;; See comments above
         (reduce #'nconc
                 (events event-accumulator)
                 :from-end t
