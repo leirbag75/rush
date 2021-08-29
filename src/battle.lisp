@@ -103,7 +103,10 @@
   (setf (in-rush-mode-p battle (target event)) t))
 
 (defmethod reset-momentum ((battle battle) combatant)
-  (setf (current-momentum battle combatant) 0))
+  (add-event battle (make-instance 'momentum-reset :target combatant)))
+
+(defmethod perform-event ((battle battle) (event momentum-reset))
+  (setf (current-momentum battle (target event)) 0))
 
 (defmethod current-momentum ((battle battle) combatant)
   (or (gethash combatant (current-momentum-table battle))

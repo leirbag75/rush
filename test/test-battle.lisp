@@ -251,3 +251,18 @@
     (leave-rush-mode battle combatant)
     (assert-events-match battle
                          (make-instance 'exit-rush-mode :target combatant))))
+
+(deftest adds-reset-momentum-event (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (reset-momentum battle combatant)
+    (assert-events-match battle
+                         (make-instance 'momentum-reset :target combatant))))
+
+(deftest sets-momentum-to-0 (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (perform-event battle
+                   (make-instance 'momentum-gain
+                                  :target combatant
+                                  :amount *small-momentum*))
+    (perform-event battle (make-instance 'momentum-reset :target combatant))
+    (assert-eql 0 (current-momentum battle combatant))))
