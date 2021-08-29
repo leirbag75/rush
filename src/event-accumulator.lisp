@@ -22,6 +22,10 @@
   (slink event-accumulator)
   (pop (queue-front event-accumulator)))
 
+(defmethod peek-event ((event-accumulator event-accumulator))
+  (slink event-accumulator)
+  (first (queue-front event-accumulator)))
+
 (defmethod add-event ((event-accumulator event-accumulator) event)
   (push event (queue-back event-accumulator)))
 

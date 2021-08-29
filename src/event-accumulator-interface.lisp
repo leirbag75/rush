@@ -5,6 +5,8 @@
 
 (defgeneric pop-event (event-accumulator))
 
+(defgeneric peek-event (event-accumulator))
+
 (defgeneric add-event (accumulator event))
 
 (defgeneric negate-event (accumulator event))

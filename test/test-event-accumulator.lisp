@@ -59,3 +59,11 @@
     (add-event event-accumulator 3)
     (assert-eql 1 (pop-event event-accumulator))
     (assert-events-match event-accumulator 2 3)))
+
+(deftest can-peek-top-event (test-event-accumulator)
+  (let ((event-accumulator (make-instance 'event-accumulator)))
+    (add-event event-accumulator 1)
+    (add-event event-accumulator 2)
+    (add-event event-accumulator 3)
+    (assert-eql 1 (peek-event event-accumulator))
+    (assert-events-match event-accumulator 1 2 3)))
