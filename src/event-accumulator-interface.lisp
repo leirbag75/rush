@@ -3,6 +3,8 @@
 
 (defgeneric next-events (battle))
 
+(defgeneric pop-event (event-accumulator))
+
 (defgeneric add-event (accumulator event))
 
 (defgeneric negate-event (accumulator event))

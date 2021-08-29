@@ -18,6 +18,10 @@
   (prog1 (queue-front event-accumulator)
     (setf (queue-front event-accumulator) '())))
 
+(defmethod pop-event ((event-accumulator event-accumulator))
+  (slink event-accumulator)
+  (pop (queue-front event-accumulator)))
+
 (defmethod add-event ((event-accumulator event-accumulator) event)
   (push event (queue-back event-accumulator)))
 
