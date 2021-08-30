@@ -44,8 +44,7 @@
   ((target :reader target
            :initarg :target)
    (amount :reader amount
-           :initarg :amount))
-  (:default-initargs :target nil :amount 0))
+           :initarg :amount)))
 
 (defmethod default-message ((event damage-infliction))
   (format nil
