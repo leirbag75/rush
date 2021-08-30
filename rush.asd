@@ -15,6 +15,7 @@
                              (:file "selector-interface")
                              (:file "move-selector-interface")
                              (:file "target-selector-interface")
+                             (:file "event-interface")
                              (:file "events")
                              (:file "event-accumulator")
                              (:file "selector")

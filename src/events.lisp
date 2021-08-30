@@ -8,9 +8,11 @@
 (defclass event ()
   ())
 
-(defgeneric default-message (event)
-  (:method ((event event))
-    ""))
+(defmethod default-message ((event event))
+  "")
+
+(defmethod event-validp ((event event) battle)
+  t)
 
 (defmethod print-object ((event event) stream)
   (print-unreadable-object (event stream :type t :identity t)
