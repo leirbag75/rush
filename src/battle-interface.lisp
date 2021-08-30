@@ -38,3 +38,5 @@
 (defgeneric enemies (battle combatant))
 
 (defgeneric subscribe (battle subscriber))
+
+(defgeneric unsubscribe (battle subscriber))

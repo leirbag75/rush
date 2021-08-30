@@ -254,6 +254,17 @@
       (add-event battle (make-instance 'mock-event))
       (commit-changes battle))))
 
+(deftest lets-subscribers-unsubscribe (test-battle)
+  (let ((battle (make-test-battle))
+        (subscriber (make-instance 'mock-subscriber
+                                   :body (lambda (&rest args)
+                                           (declare (ignore args))
+                                           (error "Failed to unsubscribe")))))
+    (subscribe battle subscriber)
+    (unsubscribe battle subscriber)
+    (add-event battle (make-instance 'mock-event))
+    (commit-changes battle)))
+
 (deftest leave-rush-mode-null-case (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
     (leave-rush-mode battle combatant)

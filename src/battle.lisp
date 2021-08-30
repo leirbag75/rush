@@ -226,3 +226,6 @@
 
 (defmethod subscribe ((battle battle) subscriber)
   (push subscriber (subscribers battle)))
+
+(defmethod unsubscribe ((battle battle) subscriber)
+  (setf (subscribers battle) (remove subscriber (subscribers battle))))
