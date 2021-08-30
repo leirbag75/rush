@@ -29,4 +29,5 @@
                              (:file "test-event-accumulator")
                              (:file "test-deck-manager")
                              (:file "test-selector")
-                             (:file "test-battle")))))
+                             (:file "test-battle")
+                             (:file "test-turn-manager")))))
