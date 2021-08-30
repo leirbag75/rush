@@ -157,3 +157,32 @@ Got value: ~A"
     (error 'objects-dont-match
            :expected expected
            :actual actual)))
+
+(defun do-nothing (&rest args)
+  (declare (ignore args)))
+
+(defclass mock ()
+  ((body :accessor body
+         :initarg :body))
+  (:default-initargs :body #'do-nothing))
+
+(defmacro define-mock-method (name lambda-list)
+  (flet ((variable-name (specializer)
+           (if (listp specializer)
+               (first specializer)
+               specializer)))
+    `(defmethod ,name ,lambda-list
+       (funcall (body _) ,@(mapcar #'variable-name lambda-list)))))
+
+(defmacro with-mock ((variable class
+                      &key
+                        (times 1) value
+                        (error-message "Mock called invalid number of times"))
+                     &body body)
+  (let ((marker (gensym)))
+    `(should-be-evaluated (,marker :times ,times :value ,value) (,error-message)
+       (let ((,variable (make-instance ',class
+                                       :body (lambda (&rest args)
+                                               (declare (ignore args))
+                                               ,marker))))
+         ,@body))))

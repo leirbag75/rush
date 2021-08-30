@@ -28,10 +28,7 @@
 (defun make-battle-with-combatants (&rest combatants)
   (make-instance 'battle
                  :combatants (mapcar #'list combatants)
-                 :turn-manager (make-instance
-                                'mock-turn-manager
-                                :body (lambda (&rest args)
-                                        (declare (ignore args))))))
+                 :turn-manager (make-instance 'mock-turn-manager)))
 
 (defun make-mock-combatant ()
   (make-instance 'mock-combatant))
@@ -112,25 +109,19 @@
     (assert-events-match battle
                          (make-instance 'death :target combatant))))
 
-(defclass mock-move ()
-  ((body :reader body
-         :initarg :body)))
+(defclass mock-move (mock)
+  ())
 
-(defmethod perform-move ((move mock-move) battle combatant target)
-  (funcall (body move) battle combatant target))
+(define-mock-method perform-move ((_ mock-move) battle combatant target))
 
 (deftest should-call-perform-move (test-battle)
-  (should-be-evaluated (-->this) ("Perform-move not called")
+  (with-mock (move mock-move :error-message "perform-move not called")
     (multiple-value-bind (battle combatant) (make-test-battle)
-      (let ((move (make-instance 'mock-move
-                                 :body (lambda (&rest args)
-                                         (declare (ignore args))
-                                         -->this))))
-        (perform-event battle
-                       (make-instance 'move-use
-                                      :user combatant
-                                      :targets '()
-                                      :move move))))))
+      (perform-event battle
+                     (make-instance 'move-use
+                                    :user combatant
+                                    :targets '()
+                                    :move move)))))
 
 (deftest adds-momentum (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
@@ -203,67 +194,45 @@
                          (make-instance 'action-gain
                                         :target combatant))))
 
-(defclass mock-turn-manager ()
-  ((body :reader body
-         :initarg :body)))
+(defclass mock-turn-manager (mock)
+  ())
 
-(defmethod initialize-turn-manager ((turn-manager mock-turn-manager) battle)
-  (funcall (body turn-manager) turn-manager battle))
+(define-mock-method initialize-turn-manager ((_ mock-turn-manager) battle))
 
 (deftest calls-initialize-turn-manager (test-battle)
-  (should-be-evaluated (-->this) ("initialize-turn-manager not called")
-    (let* ((turn-manager (make-instance 'mock-turn-manager
-                                        :body (lambda (&rest args)
-                                                (declare (ignore args))
-                                                -->this)))
-           (combatant (make-mock-combatant)))
+  (with-mock (turn-manager mock-turn-manager
+              :error-message "initialize-turn-manager not called")
+    (let ((combatant (make-mock-combatant)))
       (make-instance 'battle
                      :combatants (list (list combatant))
                      :turn-manager turn-manager))))
 
-(defclass mock-subscriber ()
-  ((body :accessor body
-         :initarg :body)))
-
-(defmethod notify ((subscriber mock-subscriber) event battle)
-  (funcall (body subscriber) subscriber event battle))
-
-;; To allow the objects to be viewed in the debugger
-(define-condition notify-test-failed (error)
-  ((battle :reader battle
-           :initarg :battle)
-   (subscriber :reader subscriber
-               :initarg :subscriber)))
-
-(defclass mock-event ()
+(defclass mock-subscriber (mock)
   ())
 
-(defmethod perform-event (battle (event mock-event))
-  ;; Do nothing
-  )
+(define-mock-method notify ((_ mock-subscriber) event battle))
+
+(defclass mock-event (mock)
+  ())
+
+(define-mock-method perform-event (battle (_ mock-event)))
 
 (deftest calls-notify (test-battle)
-  (let ((battle (make-test-battle))
-        (subscriber (make-instance 'mock-subscriber)))
-    (should-be-evaluated (-->this) ('notify-test-failed
-                                    :battle battle
-                                    :subscriber subscriber)
-      (setf (body subscriber)
-            (lambda (&rest args) (declare (ignore args)) -->this))
+  (with-mock (subscriber mock-subscriber :error-message "notify not called")
+    (let ((battle (make-test-battle)))
       (subscribe battle subscriber)
       (add-event battle (make-instance 'mock-event))
       (commit-changes battle))))
 
 (deftest lets-subscribers-unsubscribe (test-battle)
-  (let ((battle (make-test-battle))
-        (subscriber (make-instance 'mock-subscriber
-                                   :body (lambda (&rest args)
-                                           (declare (ignore args))
-                                           (error "Failed to unsubscribe")))))
-    (subscribe battle subscriber)
-    (unsubscribe battle subscriber)
-    (add-event battle (make-instance 'mock-event))
-    (commit-changes battle)))
+  (with-mock (subscriber mock-subscriber
+              :times 0
+              :error-message "Failed to unsubscribe")
+    (let ((battle (make-test-battle)))
+      (subscribe battle subscriber)
+      (unsubscribe battle subscriber)
+      (add-event battle (make-instance 'mock-event))
+      (commit-changes battle))))
 
 (deftest leave-rush-mode-null-case (test-battle)
   (multiple-value-bind (battle combatant) (make-test-battle)
