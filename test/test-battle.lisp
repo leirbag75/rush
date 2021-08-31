@@ -240,6 +240,9 @@
 
 (define-mock-method perform-event (battle (_ mock-event)))
 
+(defmethod event-validp and ((event mock-event) battle)
+  t)
+
 (deftest calls-notify (test-battle)
   (with-mock (subscriber mock-subscriber :error-message "notify not called")
     (let ((battle (make-test-battle)))

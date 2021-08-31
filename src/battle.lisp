@@ -88,25 +88,28 @@
   (add-event (incoming-event-accumulator battle) event))
 
 (defmethod commit-changes ((battle battle))
-  (labels ((process-event (event)
-             (loop
-               initially
-                  (dolist (subscriber (reverse (subscribers battle)))
-                    (notify subscriber event battle))
-               for next-event = (peek-event (incoming-event-accumulator battle))
-               until (eql (unnegated next-event) event)
-               do
-                  (process-event next-event)
-               finally
-                  (perform-event battle
-                                 (peek-event
-                                  (incoming-event-accumulator battle)))
-                  (add-event (outgoing-event-accumulator battle)
-                             (pop-event (incoming-event-accumulator battle))))))
-    (loop
-      for event = (peek-event (incoming-event-accumulator battle))
-      while event
-      do (process-event event))))
+  (let ((incoming-event-accumulator (incoming-event-accumulator battle))
+        (outgoing-event-accumulator (outgoing-event-accumulator battle)))
+    (labels ((process-event (event)
+               (loop
+                 initially
+                    (dolist (subscriber (reverse (subscribers battle)))
+                      (notify subscriber event battle))
+                 for next-event = (peek-event incoming-event-accumulator)
+                 until (eql (unnegated next-event) event)
+                 do
+                    (process-event next-event)
+                 finally
+                    (let ((final-event (peek-event incoming-event-accumulator)))
+                      (when (event-validp final-event battle)
+                        (perform-event battle final-event)
+                        (add-event outgoing-event-accumulator
+                                   final-event))
+                      (pop-event incoming-event-accumulator)))))
+      (loop
+        for event = (peek-event incoming-event-accumulator)
+        while event
+        do (process-event event)))))
 
 (defmethod inflict-damage ((battle battle) combatant amount)
   (add-event battle
