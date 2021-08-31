@@ -109,6 +109,29 @@
     (assert-events-match battle
                          (make-instance 'death :target combatant))))
 
+(deftest combatant-dies (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (when (combatant-deadp battle combatant)
+      (error "Combatant dead without doing anything"))
+    (perform-event battle
+                   (make-instance 'damage-infliction
+                                  :target combatant
+                                  :amount *mock-combatant-max-hp*))
+    (commit-changes battle)
+    (unless (combatant-deadp battle combatant)
+      (error "Combatant not counted as dead"))))
+
+(deftest dead-combatant-considered-incapacitated (test-battle)
+  (multiple-value-bind (battle combatant) (make-test-battle)
+    (when (combatant-incapacitatedp battle combatant)
+      (error "Combatant incapacitated before doing anything"))
+    (perform-event battle
+                   (make-instance 'damage-infliction
+                                  :target combatant
+                                  :amount *mock-combatant-max-hp*))
+    (unless (combatant-incapacitatedp battle combatant)
+      (error "Dead combatant not considered incapacitated"))))
+
 (defclass mock-move (mock)
   ())
 

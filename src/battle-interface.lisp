@@ -40,3 +40,7 @@
 (defgeneric subscribe (battle subscriber))
 
 (defgeneric unsubscribe (battle subscriber))
+
+(defgeneric combatant-deadp (battle combatant))
+
+(defgeneric combatant-incapacitatedp (battle combatant))

@@ -229,3 +229,9 @@
 
 (defmethod unsubscribe ((battle battle) subscriber)
   (setf (subscribers battle) (remove subscriber (subscribers battle))))
+
+(defmethod combatant-deadp ((battle battle) combatant)
+  (zerop (remaining-hp battle combatant)))
+
+(defmethod combatant-incapacitatedp ((battle battle) combatant)
+  (combatant-deadp battle combatant))
