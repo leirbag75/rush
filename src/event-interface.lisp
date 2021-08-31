@@ -3,4 +3,5 @@
 
 (defgeneric default-message (event))
 
-(defgeneric event-validp (event battle))
+(defgeneric event-validp (event battle)
+  (:method-combination and))

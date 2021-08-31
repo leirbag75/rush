@@ -11,7 +11,7 @@
 (defmethod default-message ((event event))
   "")
 
-(defmethod event-validp ((event event) battle)
+(defmethod event-validp and ((event event) battle)
   t)
 
 (defmethod print-object ((event event) stream)
@@ -40,10 +40,22 @@
   ((event :reader event
           :initarg :event)))
 
-(defclass damage-infliction (event)
+(defclass live-target ()
   ((target :reader target
-           :initarg :target)
-   (amount :reader amount
+           :initarg :target)))
+
+(defmethod event-validp and ((event live-target) battle)
+  (not (combatant-deadp battle (target event))))
+
+(defclass mobile-user ()
+  ((user :reader user
+         :initarg :user)))
+
+(defmethod event-validp and ((event mobile-user) battle)
+  (not (combatant-incapacitatedp battle (user event))))
+
+(defclass damage-infliction (live-target event)
+  ((amount :reader amount
            :initarg :amount)))
 
 (defmethod default-message ((event damage-infliction))
@@ -52,10 +64,8 @@
           (name (target event))
           (amount event)))
 
-(defclass damage-heal (event)
-  ((target :reader target
-           :initarg :target)
-   (amount :reader amount
+(defclass damage-heal (live-target event)
+  ((amount :reader amount
            :initarg :amount)))
 
 (defmethod default-message ((event damage-heal))
@@ -66,21 +76,18 @@
 
 (defclass death (event)
   ((target :reader target
-           :initarg :target))
-  (:default-initargs :target nil))
+           :initarg :target)))
 
 (defmethod default-message ((event death))
   (format nil
           "~A died."
           (name (target event))))
 
-(defclass move-use (event)
-  ((move :reader move
-         :initarg :move)
-   (user :reader user
-         :initarg :user)
-   (targets :reader targets
-            :initarg :targets))
+(defclass move-use (mobile-user event)
+  ((targets :reader targets
+            :initarg :targets)
+   (move :reader move
+         :initarg :move))
   (:default-initargs :targets '()))
 
 (defmethod default-message ((event move-use))
@@ -90,10 +97,8 @@
           (name (move event))
           (mapcar #'name (targets event))))
 
-(defclass momentum-gain (event)
-  ((target :reader target
-           :initarg :target)
-   (amount :reader amount
+(defclass momentum-gain (live-target event)
+  ((amount :reader amount
            :initarg :amount)))
 
 (defmethod default-message ((event momentum-gain))
@@ -102,28 +107,24 @@
           (name (target event))
           (amount event)))
 
-(defclass enter-rush-mode (event)
-  ((target :reader target
-           :initarg :target)))
+(defclass enter-rush-mode (live-target event)
+  ())
 
 (defmethod default-message ((event enter-rush-mode))
   (format nil
           "~A entered rush mode."
           (name (target event))))
 
-(defclass exit-rush-mode (event)
-  ((target :reader target
-           :initarg :target)))
+(defclass exit-rush-mode (live-target event)
+  ())
 
 (defmethod default-message ((event exit-rush-mode))
   (format nil
           "~A exited rush mode."
           (name (target event))))
 
-(defclass action-gain (event)
-  ((target :reader target
-           :initarg :target)
-   (amount :reader amount
+(defclass action-gain (live-target event)
+  ((amount :reader amount
            :initarg :amount))
   (:default-initargs :amount 1))
 
@@ -133,10 +134,8 @@
           (name (target event))
           (amount event)))
 
-(defclass action-loss (event)
-  ((target :reader target
-           :initarg :target)
-   (amount :reader amount
+(defclass action-loss (live-target event)
+  ((amount :reader amount
            :initarg :amount))
   (:default-initargs :amount 1))
 
@@ -146,9 +145,8 @@
           (name (target event))
           (amount event)))
 
-(defclass momentum-reset (event)
-  ((target :reader target
-           :initarg :target)))
+(defclass momentum-reset (live-target event)
+  ())
 
 (defmethod default-message ((event momentum-reset))
   (format nil
