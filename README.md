@@ -53,6 +53,11 @@ inflicting damage). Each event performed is pushed onto another
 event-accumulator, which can be queried later for events to show to
 the player.
 
+The battle object is currently implemented with the intention of
+making the game deck-based, but I'm not sure if I'm going to stick
+with this. I'm thinking of giving each character a fixed set of
+attacks, like most RPG's, and adding in a "stance" system instead.
+
 The UI is not implemented yet, but it's planned for it to handle menus
 and alerting the player of events in the battle. Alerting the player
 of events is to be implemented as a multimethod on the UI object and
